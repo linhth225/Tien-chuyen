@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Mini-Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f2f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            text-align: center;
+            border: 3px solid #e2eafc;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #6b705c;
+            font-weight: 700;
+        }
+
+        .word-display {
+            font-size: 2.2em;
+            color: #2b2d42;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff1e6;
+            border-radius: 16px;
+            font-weight: 700;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #fdf5e6;
+            border: 2px solid #fde2e4;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            font-family: inherit;
+            color: #4a4e69;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .option-btn:hover {
+            background-color: #fde2e4;
+            transform: translateY(-2px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .option-btn.correct {
+            background-color: #d8f3dc;
+            border-color: #b7e4c7;
+            color: #1b4332;
+            font-weight: 700;
+        }
+
+        .option-btn.wrong {
+            background-color: #ffcad4;
+            border-color: #ffb3c6;
+            color: #590d22;
+        }
+
+        .next-btn {
+            background-color: #a2d2ff;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            transition: background-color 0.2s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            background-color: #bde0fe;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #ffafcc;
+            font-size: 2em;
+        }
+
+        .restart-btn {
+            background-color: #ffc8dd;
+            color: #5c0029;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container" id="quiz-screen">
+        <div class="header">
+            <span>Câu hỏi: <span id="current-question">1</span>/<span id="total-questions">32</span></span>
+            <span>Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="word-display" id="word">Loading...</div>
+        
+        <div class="options-grid" id="options">
+            <!-- Buttons will be generated here -->
+        </div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục ➔</button>
+    </div>
+
+    <div class="game-container" id="result-screen">
+        <h2>🎉 Chúc mừng! 🎉</h2>
+        <p>Bạn đã hoàn thành trò chơi.</p>
+        <p style="font-size: 1.5em; font-weight: bold; color: #4a4e69;">Điểm của bạn: <span id="final-score"></span></p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại</button>
+    </div>
+
+    <script>
+        const vocabData = [
+            { word: "grow up", meaning: "lớn lên, trưởng thành" },
+            { word: "look after", meaning: "chăm sóc" },
+            { word: "keep someone in", meaning: "bắt/giữ ai ở trong nhà" },
+            { word: "bring up", meaning: "nuôi dạy" },
+            { word: "find out", meaning: "tìm ra, phát hiện, biết được" },
+            { word: "give up", meaning: "từ bỏ" },
+            { word: "keep on", meaning: "tiếp tục" },
+            { word: "look forward to", meaning: "mong đợi, háo hức chờ đợi" },
+            { word: "run out of", meaning: "hết, cạn" },
+            { word: "move in with", meaning: "chuyển đến sống cùng" },
+            { word: "get on with", meaning: "hòa thuận với, có quan hệ tốt với" },
+            { word: "engaged", meaning: "đính hôn" },
+            { word: "anniversary", meaning: "ngày kỷ niệm, diễn ra lặp đi lặp lại hàng năm vào đúng ngày đó" },
+            { word: "bridegroom", meaning: "chú rể" },
+            { word: "best man", meaning: "phù rể chính" },
+            { word: "bridesmaid", meaning: "phù dâu" },
+            { word: "honeymoon", meaning: "tuần trăng mật" },
+            { word: "reunion", meaning: "cuộc đoàn tụ, họp mặt" },
+            { word: "milestone", meaning: "cột mốc quan trọng" },
+            { word: "ceremony", meaning: "nghi lễ, buổi lễ, diễn ra duy nhất một lần cho một sự kiện cụ thể" },
+            { word: "hospitality", meaning: "lòng hiếu khách" },
+            { word: "elaborate", meaning: "cầu kỳ, công phu" },
+            { word: "tradition", meaning: "truyền thống" },
+            { word: "lavish", meaning: "xa hoa, sang trọng" },
+            { word: "meaningful", meaning: "ý nghĩa" },
+            { word: "commemorate", meaning: "tưởng niệm, kỷ niệm" },
+            { word: "invitation", meaning: "lời mời, thiệp mời" },
+            { word: "decorations", meaning: "đồ trang trí" },
+            { word: "occasion", meaning: "dịp, sự kiện đặc biệt" },
+            { word: "cheerful", meaning: "vui vẻ, phấn khởi" },
+            { word: "casual", meaning: "thoải mái, không trang trọng" },
+            { word: "memorable", meaning: "đáng nhớ" }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = 32;
+
+        const wordEl = document.getElementById("word");
+        const optionsEl = document.getElementById("options");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+        const totalQEl = document.getElementById("total-questions");
+        
+        // Sound System using Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                oscillator.frequency.setValueAtTime(100, audioCtx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+
+            currentQuestions = [...vocabData].sort(() => 0.5 - Math.random()).slice(0, totalQuestions);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            totalQEl.innerText = totalQuestions;
+            
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            const currentQ = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            wordEl.innerText = currentQ.word;
+
+            let options = [currentQ.meaning];
+            while (options.length < 4) {
+                const randomItem = vocabData[Math.floor(Math.random() * vocabData.length)];
+                if (!options.includes(randomItem.meaning)) {
+                    options.push(randomItem.meaning);
+                }
+            }
+
+            options.sort(() => 0.5 - Math.random());
+
+            optionsEl.innerHTML = "";
+            options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    initAudio();
+                    checkAnswer(btn, currentQ.meaning);
+                };
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedBtn, correctMeaning) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedBtn.innerText === correctMeaning) {
+                selectedBtn.classList.add("correct");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+            } else {
+                selectedBtn.classList.add("wrong");
+                playSound('wrong');
+                buttons.forEach(btn => {
+                    if (btn.innerText === correctMeaning) {
+                        btn.classList.add("correct");
+                    }
+                });
+            }
+
+            nextBtn.style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById("quiz-screen").style.display = "none";
+            document.getElementById("result-screen").style.display = "block";
+            document.getElementById("final-score").innerText = score;
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
