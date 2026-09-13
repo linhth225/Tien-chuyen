@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House & Home Vocabulary Quiz 🏡</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #e0f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #b2ebf2 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, #ffcdd2 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(0, 188, 212, 0.15);
+            padding: 35px;
+            border: 6px solid #80deea;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #00838f;
+            font-weight: 700;
+            font-size: 1.4em;
+            background: #e0f7fa;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #00bcd4;
+        }
+
+        .question-box {
+            margin: 20px 0 30px 0;
+            padding: 30px 20px;
+            background-color: #fff8e1;
+            border-radius: 25px;
+            border: 4px solid #ffe082;
+        }
+
+        .question-text {
+            font-size: 1.8em;
+            color: #ef6c00;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .question-sub {
+            font-size: 1.1em;
+            color: #795548;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: #fce4ec;
+            border: 4px solid #f8bbd0;
+            padding: 18px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            color: #880e4f;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            background-color: #f8bbd0;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .option-btn.correct {
+            background-color: #c8e6c9 !important;
+            border-color: #81c784 !important;
+            color: #1b5e20 !important;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong {
+            background-color: #ffcdd2 !important;
+            border-color: #e57373 !important;
+            color: #b71c1c !important;
+            animation: shake 0.5s;
+        }
+
+        .explanation-box {
+            display: none;
+            background-color: #f3e5f5;
+            border: 4px solid #ce93d8;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #4a148c;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .explanation-box strong {
+            color: #8e24aa;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .exp-en-meaning {
+            font-style: italic;
+            color: #6a1b9a;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .exp-example {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px dashed #ce93d8;
+            margin-top: 10px;
+        }
+
+        .correct-title { color: #2e7d32; }
+        .wrong-title { color: #c62828; }
+
+        .next-btn {
+            background-color: #4fc3f7;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #0288d1;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #0288d1;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #0288d1;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #00838f;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #ffb74d;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #f57c00;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #f57c00;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>🏠 Câu: <span id="current-question">1</span>/25</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="question-box">
+            <div class="question-sub">Từ này có nghĩa là gì trong tiếng Anh nhỉ? 🤔</div>
+            <div class="question-text" id="question">Loading...</div>
+        </div>
+        
+        <div class="options-grid" id="options">
+            <!-- Buttons -->
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào bé ơi! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #006064;">Bé đã học thêm được rất nhiều từ vựng về ngôi nhà rồi!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #006064;">Điểm số của bé: <br><span style="font-size: 2.5em; color: #ff9800;" id="final-score"></span> / 250 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const rawVocabData = [
+            { vn: "thép", en: "steel", simple: "a strong metal used for building", ex: "The house has a strong steel frame." },
+            { vn: "gạch", en: "brick", simple: "a hard block used for building walls", ex: "The walls are made of red brick." },
+            { vn: "kính, thủy tinh", en: "glass", simple: "a hard, clear material used for windows", ex: "The living room has large glass windows." },
+            { vn: "bãi cỏ", en: "lawn", simple: "an area of grass around a house", ex: "The children are playing on the lawn." },
+            { vn: "hàng rào", en: "fence", simple: "a structure around an area of land", ex: "There is a wooden fence around the garden." },
+            { vn: "ống khói", en: "chimney", simple: "a pipe that carries smoke out of a building", ex: "Smoke was coming from the chimney." },
+            { vn: "vòi nước", en: "tap", simple: "a device that controls the flow of water", ex: "Please turn off the tap when you finish." },
+            { vn: "máy rửa bát", en: "dishwasher", simple: "a machine that washes dishes", ex: "We put the dirty plates in the dishwasher." },
+            { vn: "chảo rán", en: "frying pan", simple: "a flat pan used for frying food", ex: "Heat some oil in the frying pan." },
+            { vn: "bếp, nồi/bếp nấu", en: "cooker", simple: "a piece of equipment used for cooking", ex: "The cooker has four gas rings." },
+            { vn: "dụng cụ mở nút chai", en: "corkscrew", simple: "a tool for removing corks from bottles", ex: "He used a corkscrew to open the bottle." },
+            { vn: "ngăn/tủ đông", en: "freezer", simple: "a machine that keeps food frozen", ex: "We keep meat in the freezer." },
+            { vn: "bình, ca (có quai cầm)", en: "jug", simple: "a container for holding and pouring liquids", ex: "She filled the jug with water." },
+            { vn: "các thiết bị điện gia dụng", en: "appliances", simple: "machines used at home for particular jobs", ex: "Modern kitchens have many electrical appliances." },
+            { vn: "lọ hoa", en: "vase", simple: "a container used for displaying flowers", ex: "She put some roses in the vase." },
+            { vn: "đồ cổ", en: "antiques", simple: "old objects that are valuable or interesting", ex: "Her house is full of beautiful antiques." },
+            { vn: "đệm, gối tựa", en: "cushions", simple: "soft objects placed on chairs or sofas", ex: "There are several cushions on the sofa." },
+            { vn: "công tắc", en: "switch", simple: "a device used to turn something on or off", ex: "Turn off the light at the switch." },
+            { vn: "rèm cuốn / rèm sáo", en: "blind", simple: "a covering for a window", ex: "I closed the blind because the sun was too bright." },
+            { vn: "ga trải giường", en: "sheet", simple: "a large piece of cloth used to cover a bed", ex: "I changed the sheets at the weekend." },
+            { vn: "khăn tắm / khăn lau", en: "towel", simple: "a piece of cloth used for drying", ex: "Don't forget to bring a towel." },
+            { vn: "chậu; bồn rửa", en: "basin", simple: "a container used for washing", ex: "She washed her hands in the basin." },
+            { vn: "tủ nhiều ngăn kéo", en: "chest of drawers", simple: "a piece of furniture with several drawers", ex: "My clothes are in the chest of drawers." },
+            { vn: "chăn bông", en: "duvet", simple: "a thick, soft cover used on a bed", ex: "I need a warm duvet in winter." },
+            { vn: "đèn chùm", en: "chandelier", simple: "a large decorative light hanging from the ceiling", ex: "A beautiful chandelier hangs above the dining table." },
+            { vn: "tủ có ngăn", en: "cabinet", simple: "a piece of furniture used for storing things", ex: "We keep the glasses in the kitchen cabinet." },
+            { vn: "rộng rãi", en: "spacious", simple: "having a lot of space", ex: "The new apartment is bright and spacious." },
+            { vn: "ấm cúng", en: "cosy", simple: "comfortable, warm and pleasant", ex: "The living room is small but very cosy." },
+            { vn: "nhà một tầng", en: "bungalow", simple: "a house with only one floor", ex: "My grandparents live in a small bungalow." },
+            { vn: "nhà nhỏ ở nông thôn", en: "cottage", simple: "a small, usually old house in the countryside", ex: "They stayed in a beautiful cottage near the lake." },
+            { vn: "tầng hầm", en: "basement", simple: "a room or floor below ground level", ex: "They use the basement as a storage room." },
+            { vn: "chiếu nghỉ cầu thang", en: "landing", simple: "an area at the top of stairs", ex: "There is a small window on the landing." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = 25;
+
+        const questionEl = document.getElementById("question");
+        const optionsEl = document.getElementById("options");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            let shuffled = [...rawVocabData].sort(() => Math.random() - 0.5);
+            currentQuestions = shuffled.slice(0, totalQuestions);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            
+            const currentQ = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            questionEl.innerText = `"${currentQ.vn}"`;
+            optionsEl.innerHTML = "";
+
+            let options = [currentQ.en];
+            while(options.length < 4) {
+                let randomItem = rawVocabData[Math.floor(Math.random() * rawVocabData.length)].en;
+                if(!options.includes(randomItem)) {
+                    options.push(randomItem);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            options.forEach((optText) => {
+                const btn = document.createElement("button");
+                btn.classList.add("option-btn");
+                btn.innerText = optText;
+                
+                // Gắn dữ liệu để lát nữa tìm nút đúng dễ hơn
+                if(optText === currentQ.en) {
+                    btn.dataset.correct = "true";
+                }
+
+                btn.onclick = () => {
+                    initAudio();
+                    checkAnswer(btn, optText, currentQ);
+                };
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedBtn, selectedText, currentQ) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let resultTitle = "";
+
+            if (selectedText === currentQ.en) {
+                selectedBtn.classList.add("correct");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                resultTitle = "<span class='exp-title correct-title'>🎉 Giỏi quá! Đáp án chính xác!</span>";
+            } else {
+                selectedBtn.classList.add("wrong");
+                
+                // Hiển thị và làm nổi bật đáp án đúng
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct");
+                        btn.innerHTML += " ✔️"; // Thêm biểu tượng checkmark cho rõ
+                    }
+                });
+                playSound('wrong');
+                resultTitle = `<span class='exp-title wrong-title'>❌ Tiếc quá! Đáp án đúng phải là: ${currentQ.en.toUpperCase()}</span>`;
+            }
+
+            const expHTML = `
+                ${resultTitle}
+                Từ <strong>${currentQ.en}</strong> có nghĩa là <strong>${currentQ.vn}</strong>.<br>
+                <span class='exp-en-meaning'>(Ý nghĩa: ${currentQ.simple})</span>
+                <div class='exp-example'>📖 <b>Ví dụ:</b> ${currentQ.ex}</div>
+            `;
+
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
