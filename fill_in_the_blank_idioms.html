@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idioms Fill-in-the-Blanks Game 🧩</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #e1e8f0 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #d9e2ec 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(102, 126, 153, 0.15);
+            padding: 35px;
+            border: 6px solid #bcccdc;
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #486581;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #f0f4f8;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #9fb3c8;
+        }
+
+        .question-box {
+            margin: 20px 0 30px 0;
+            padding: 35px 25px;
+            background-color: #f8ccff;
+            border-radius: 25px;
+            border: 4px solid #e2a1eb;
+            font-size: 1.5em;
+            color: #6a1b9a;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 15px 20px;
+            font-size: 1.4em;
+            font-family: inherit;
+            border: 4px solid #b3e5fc;
+            border-radius: 20px;
+            text-align: center;
+            color: #0277bd;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.2s;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: #29b6f6;
+            box-shadow: inset 0 4px 6px rgba(41, 182, 246, 0.1), 0 0 15px rgba(41, 182, 246, 0.3);
+        }
+
+        .submit-btn {
+            background-color: #29b6f6;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            box-shadow: 0 6px 0 #0288d1;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #0288d1;
+            background-color: #4fc3f7;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #0288d1;
+        }
+
+        .explanation-box {
+            display: none;
+            background-color: #e8f5e9;
+            border: 4px solid #81c784;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #2e7d32;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #ffebee;
+            border-color: #e57373;
+            color: #c62828;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .exp-idiom {
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 700;
+        }
+
+        .next-btn {
+            background-color: #ff9800;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #f57c00;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #f57c00;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #f57c00;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #0277bd;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #ab47bc;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #8e24aa;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #8e24aa;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📝 Câu: <span id="current-question">1</span>/20</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div style="font-size: 1.1em; color: #829ab1; font-weight: 700; margin-bottom: 5px;">Hãy điền MỘT từ tiếng Anh vào chỗ trống:</div>
+        <div class="question-box" id="question">
+            Loading...
+        </div>
+        
+        <div class="input-area" id="input-area">
+            <input type="text" id="answer-input" placeholder="Nhập từ còn thiếu..." autocomplete="off">
+            <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra ✔️</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #486581;">Bạn đã hoàn thành thử thách Điền Từ Thành Ngữ!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #486581;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #29b6f6;" id="final-score"></span> / 200 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const idiomsData = [
+            { 
+                q: "It's a crying ________ that they had to cancel the concert after all that preparation.", 
+                ans: "shame", 
+                idiom: "A crying shame", 
+                meaning: "A situation that is very shocking, sad, or unfair." 
+            },
+            { 
+                q: "Don't be afraid of the dog; he looks big, but he is as gentle as a ________.", 
+                ans: "lamb", 
+                idiom: "Gentle as a lamb", 
+                meaning: "Very calm, sweet, and harmless." 
+            },
+            { 
+                q: "We had a great holiday, but the only fly in the ________ was the rainy weather on the last day.", 
+                ans: "ointment", 
+                idiom: "A fly in the ointment", 
+                meaning: "A minor problem that spoils a good situation." 
+            },
+            { 
+                q: "I bought this beautiful dress at a flea market for next to ________.", 
+                ans: "nothing", 
+                idiom: "For next to nothing", 
+                meaning: "For a very small amount of money; almost free." 
+            },
+            { 
+                q: "First I lost my keys, then my car broke down. It seems misfortunes don't come ________.", 
+                ans: "singly", 
+                idiom: "Misfortunes don't come singly", 
+                meaning: "Bad luck often happens in groups (Họa vô đơn chí)." 
+            },
+            { 
+                q: "I don't understand what you want me to do. Can you ________ it out for me?", 
+                ans: "spell", 
+                idiom: "Spell sth out", 
+                meaning: "To explain something very clearly and in detail." 
+            },
+            { 
+                q: "He was forced to sign the contract ________ his will.", 
+                ans: "against", 
+                idiom: "Against one's will", 
+                meaning: "Forced to do something you do not want to do." 
+            },
+            { 
+                q: "It was completely out of ________ for her to shout like that; she's usually so calm.", 
+                ans: "character", 
+                idiom: "Out of character", 
+                meaning: "Not typical of a person’s usual behavior." 
+            },
+            { 
+                q: "I have to take ________ with you on that point; I completely disagree.", 
+                ans: "issue", 
+                idiom: "Take issue with sb", 
+                meaning: "To strongly disagree or argue with someone." 
+            },
+            { 
+                q: "I apologize for my mistake. I realize I was in the ________.", 
+                ans: "wrong", 
+                idiom: "In the wrong", 
+                meaning: "Responsible for a mistake or a bad situation." 
+            },
+            { 
+                q: "Let's split the bill for dinner now, and we can ________ up for the drinks later.", 
+                ans: "settle", 
+                idiom: "Settle up", 
+                meaning: "To pay someone the money that you owe them." 
+            },
+            { 
+                q: "My boss does not take ________ to being interrupted during a meeting.", 
+                ans: "kindly", 
+                idiom: "Not take kindly to sth", 
+                meaning: "To dislike or be annoyed by sth." 
+            },
+            { 
+                q: "We should try to get tickets online. ________ that, we'll buy them at the door.", 
+                ans: "failing", 
+                idiom: "Failing that", 
+                meaning: "If that option is not possible or does not happen." 
+            },
+            { 
+                q: "It never crossed my ________ that she would actually quit her job.", 
+                ans: "mind", 
+                idiom: "Enter / Cross one's mind", 
+                meaning: "An idea or thought comes to you." 
+            },
+            { 
+                q: "His personal opinions have no ________ on his professional decisions.", 
+                ans: "bearing", 
+                idiom: "Have no bearing on", 
+                meaning: "To have no effect or influence on sth." 
+            },
+            { 
+                q: "Please don't ________ exception to my honest feedback; I'm just trying to help.", 
+                ans: "take", 
+                idiom: "Take exception to sth/sb", 
+                meaning: "To object to sth; to be offended by sth." 
+            },
+            { 
+                q: "Since we are in the neighborhood, let's ________ in on Mary to see how she is doing.", 
+                ans: "drop", 
+                idiom: "Drop in on sb", 
+                meaning: "To visit someone unexpectedly or for a short time." 
+            },
+            { 
+                q: "The economic crisis could bring the company to its ________.", 
+                ans: "knees", 
+                idiom: "Bring sb/sth to its/their knees", 
+                meaning: "To destroy or ruin sb/sth; to force to submit." 
+            },
+            { 
+                q: "I can't make my ________ up about which dress to wear to the party.", 
+                ans: "mind", 
+                idiom: "Make one's mind up", 
+                meaning: "To decide." 
+            },
+            { 
+                q: "The band's new song didn't go ________ well with the older audience.", 
+                ans: "down", 
+                idiom: "Go down well with sb", 
+                meaning: "To be well received or liked by an audience." 
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        const totalQuestions = 20;
+
+        const questionEl = document.getElementById("question");
+        const inputEl = document.getElementById("answer-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Xáo trộn 20 câu
+            currentQuestions = [...idiomsData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box"; // Reset class
+            inputEl.value = "";
+            inputEl.disabled = false;
+            submitBtn.style.display = "block";
+            
+            const currentQ = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            // Highlight chỗ trống
+            const formattedQ = currentQ.q.replace("________", "<span style='color: #29b6f6; border-bottom: 3px dashed #29b6f6; padding: 0 15px;'>?</span>");
+            questionEl.innerHTML = formattedQ;
+            
+            inputEl.focus();
+        }
+
+        // Bắt sự kiện nhấn Enter
+        inputEl.addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && !inputEl.disabled) {
+                event.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        function checkAnswer() {
+            initAudio(); // Đảm bảo audio hoạt động
+            const currentQ = currentQuestions[currentQuestionIndex];
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const correctAnswer = currentQ.ans.toLowerCase();
+            
+            if (userAnswer === "") {
+                // Rung nhẹ nếu chưa nhập gì
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let resultTitle = "";
+
+            if (userAnswer === correctAnswer) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Chính xác! Bạn giỏi quá!</span>";
+                
+                // Thay thế chỗ trống bằng từ đúng màu xanh
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #4caf50; font-weight: 900; text-decoration: underline;'>${currentQ.ans.toUpperCase()}</span>`);
+            } else {
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Sai mất rồi! Từ đúng phải là: <b>${currentQ.ans.toUpperCase()}</b></span>`;
+                
+                // Thay thế chỗ trống bằng từ đúng màu đỏ
+                questionEl.innerHTML = currentQ.q.replace("________", `<span style='color: #e57373; font-weight: 900; text-decoration: underline;'>${currentQ.ans.toUpperCase()}</span>`);
+            }
+
+            const expHTML = `
+                ${resultTitle}
+                <div class='exp-idiom'>
+                    📌 Cụm từ: <b>${currentQ.idiom}</b><br>
+                    💡 Ý nghĩa: <i>${currentQ.meaning}</i>
+                </div>
+            `;
+
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
