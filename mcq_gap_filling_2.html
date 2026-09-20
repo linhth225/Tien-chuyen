@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary MCQ Game 🌿</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #dcfce7 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #bbf7d0 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(22, 101, 52, 0.1);
+            padding: 35px;
+            border: 6px solid #86efac;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #166534;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #f0fdf4;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #4ade80;
+        }
+
+        .instruction {
+            font-size: 1.1em;
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .question-box {
+            margin: 20px 0 25px 0;
+            padding: 30px 20px;
+            background-color: #fffbeb;
+            border-radius: 25px;
+            border: 4px solid #fcd34d;
+            font-size: 1.8em;
+            color: #b45309;
+            font-weight: 900;
+            line-height: 1.4;
+        }
+
+        /* Styles for MCQ */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 500px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 4px solid #cbd5e1;
+            padding: 18px 15px;
+            font-size: 1.3em;
+            font-family: inherit;
+            color: #334155;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.03);
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .option-btn.correct-mcq {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            animation: shake 0.5s;
+        }
+
+        /* General UI */
+        .explanation-box {
+            display: none;
+            background-color: #f0fdf4;
+            border: 4px solid #4ade80;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #166534;
+            font-size: 1.2em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+        
+        .exp-title {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .exp-detail strong {
+            color: #0369a1;
+            font-size: 1.2em;
+        }
+
+        .next-btn {
+            background-color: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #2563eb;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #2563eb;
+            background-color: #60a5fa;
+        }
+
+        .next-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #2563eb;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #16a34a;
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #f59e0b;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.5em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #d97706;
+            transition: all 0.2s;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #d97706;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>📝 Câu: <span id="current-question">1</span>/24</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction">Chọn từ tiếng Anh có nghĩa là:</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area">
+            <!-- Options will be injected here -->
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Tuyệt vời! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #475569;">Bạn đã hoàn thành bài kiểm tra Từ Vựng!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #475569;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #0ea5e9;" id="final-score"></span> / 240 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Chơi lại nhé! 🎈</button>
+    </div>
+
+    <script>
+        const vocabData = [
+            { en: "artificial light", vi: "ánh sáng nhân tạo", ex: "Plants need natural sunshine, not artificial light." },
+            { en: "shady places", vi: "nơi có bóng râm", ex: "Let's sit in shady places to avoid the hot sun." },
+            { en: "annual", vi: "hàng năm", ex: "We have an annual meeting every December." },
+            { en: "stay hydrated", vi: "duy trì đủ nước", ex: "Drink plenty of water to stay hydrated." },
+            { en: "migrate", vi: "di cư", ex: "Many birds migrate south for the winter." },
+            { en: "regulate", vi: "điều chỉnh, điều hòa", ex: "Sweating helps regulate our body temperature." },
+            { en: "resources", vi: "tài nguyên", ex: "Water is one of our most important natural resources." },
+            { en: "local communities", vi: "cộng đồng địa phương", ex: "The project brings many benefits to local communities." },
+            { en: "generate income", vi: "tạo ra thu nhập", ex: "Selling handmade crafts can generate income." },
+            { en: "authorities", vi: "chính quyền, cơ quan chức năng", ex: "You should report the stolen bike to the local authorities." },
+            { en: "device", vi: "thiết bị", ex: "A smartphone is a very useful device." },
+            { en: "transform", vi: "thay đổi hoàn toàn", ex: "The new paint will transform the look of the room." },
+            { en: "essential", vi: "thiết yếu, cần thiết", ex: "Water is essential for life." },
+            { en: "flexibility", vi: "sự linh hoạt", ex: "Yoga helps improve your physical flexibility." },
+            { en: "low-lying areas", vi: "vùng đất thấp", ex: "Floods often happen in low-lying areas during heavy rain." },
+            { en: "increasingly popular", vi: "ngày càng phổ biến", ex: "Electric cars are becoming increasingly popular." },
+            { en: "renewable energy", vi: "năng lượng tái tạo", ex: "Solar power is a form of clean, renewable energy." },
+            { en: "sustainable", vi: "bền vững", ex: "We need to protect the environment for sustainable development." },
+            { en: "carbon emissions", vi: "khí thải carbon", ex: "Riding a bike helps reduce carbon emissions." },
+            { en: "face many dangers", vi: "đối mặt với nhiều nguy hiểm", ex: "Wild animals face many dangers in the jungle." },
+            { en: "hatchlings", vi: "con non mới nở", ex: "The turtle hatchlings safely crawled towards the sea." },
+            { en: "visibility", vi: "tầm nhìn, khả năng quan sát", ex: "Thick fog reduced visibility to just 50 meters." },
+            { en: "unwanted catches", vi: "sinh vật bị đánh bắt ngoài ý muốn", ex: "New fishing nets help fishermen reduce unwanted catches." },
+            { en: "energy-efficient", vi: "tiết kiệm năng lượng", ex: "We should use energy-efficient light bulbs to save money." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Generate question pool and shuffle
+            currentQuestions = [...vocabData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function getRandomDistractors(correctWord, count = 3) {
+            const allWords = vocabData.map(v => v.en);
+            const distractors = allWords.filter(w => w !== correctWord);
+            return distractors.sort(() => Math.random() - 0.5).slice(0, count);
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const currentItem = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+            
+            // Set question text (Vietnamese meaning)
+            questionEl.innerHTML = `"${currentItem.vi}"`;
+
+            // Generate options (1 correct + 3 wrong)
+            const distractors = getRandomDistractors(currentItem.en, 3);
+            let options = [currentItem.en, ...distractors];
+            options = options.sort(() => Math.random() - 0.5); // Shuffle options
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = "options-grid";
+            
+            options.forEach(opt => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.innerText = opt;
+                if(opt === currentItem.en) btn.dataset.correct = "true";
+                btn.onclick = () => {
+                    initAudio();
+                    checkMCQAnswer(btn, opt, currentItem);
+                };
+                optionsContainer.appendChild(btn);
+            });
+            
+            dynamicAreaEl.appendChild(optionsContainer);
+        }
+
+        function checkMCQAnswer(selectedBtn, selectedText, currentItem) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let resultTitle = "";
+
+            if (selectedText === currentItem.en) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                explanationEl.classList.remove("wrong-bg");
+                resultTitle = "<span class='exp-title correct-title'>🎉 Chính xác tuyệt đối!</span>";
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                // Highlight the correct answer
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✔️";
+                    }
+                });
+                playSound('wrong');
+                explanationEl.classList.add("wrong-bg");
+                resultTitle = `<span class='exp-title wrong-title'>❌ Sai mất rồi! Từ đúng phải là: <b>${currentItem.en}</b></span>`;
+            }
+
+            // Show explanation with context
+            const expHTML = `
+                ${resultTitle}
+                <div class='exp-detail'>
+                    📌 Từ vựng: <strong>${currentItem.en}</strong><br>
+                    🇻🇳 Ý nghĩa: ${currentItem.vi}<br>
+                    📖 Ví dụ: <i>${currentItem.ex}</i>
+                </div>
+            `;
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
