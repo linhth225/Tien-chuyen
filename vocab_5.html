@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Vocabulary & Phrasal Verbs Game 🌿</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;900&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0fdf4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, #dcfce7 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, #bbf7d0 0%, transparent 20%);
+        }
+
+        .quiz-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 720px;
+            border-radius: 35px;
+            box-shadow: 0 15px 40px rgba(22, 101, 52, 0.12);
+            padding: 35px;
+            border: 6px solid #86efac;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            color: #166534;
+            font-weight: 900;
+            font-size: 1.4em;
+            background: #f0fdf4;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 2px dashed #4ade80;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-mcq {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border: 2px solid #7dd3fc;
+        }
+
+        .badge-fill {
+            background-color: #fef3c7;
+            color: #b45309;
+            border: 2px solid #fcd34d;
+        }
+
+        .instruction {
+            font-size: 1.15em;
+            color: #15803d;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .question-box {
+            margin: 15px 0 25px 0;
+            padding: 25px 20px;
+            background-color: #fffbeb;
+            border-radius: 25px;
+            border: 4px solid #fcd34d;
+            font-size: 1.8em;
+            color: #92400e;
+            font-weight: 900;
+            line-height: 1.4;
+        }
+
+        .question-box.fill-style {
+            background-color: #f0fdf4;
+            border-color: #86efac;
+            color: #14532d;
+        }
+
+        .meaning-sub {
+            font-size: 0.6em;
+            display: block;
+            margin-top: 8px;
+            color: #047857;
+            font-weight: 700;
+        }
+
+        /* MCQ Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 550px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background-color: #f8fafc;
+            border: 4px solid #cbd5e1;
+            padding: 16px 15px;
+            font-size: 1.25em;
+            font-family: inherit;
+            color: #334155;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 75px;
+        }
+
+        .option-btn:hover {
+            transform: scale(1.02);
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .option-btn.correct-mcq {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            animation: bounce 0.5s;
+        }
+
+        .option-btn.wrong-mcq {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+            animation: shake 0.5s;
+        }
+
+        /* Fill in blanks */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 75%;
+            padding: 14px 20px;
+            font-size: 1.35em;
+            font-family: inherit;
+            border: 4px solid #93c5fd;
+            border-radius: 20px;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: 700;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+        }
+
+        .submit-btn {
+            background-color: #0284c7;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.25em;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            box-shadow: 0 5px 0 #0369a1;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #0369a1;
+            background-color: #38bdf8;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #f0fdf4;
+            border: 4px solid #4ade80;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 20px;
+            color: #166534;
+            font-size: 1.15em;
+            line-height: 1.5;
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.wrong-bg {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+            color: #991b1b;
+        }
+        
+        .exp-title {
+            font-size: 1.25em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .audio-btn {
+            background-color: #0284c7;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 3px 0 #0369a1;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.08);
+            background-color: #38bdf8;
+        }
+
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px dashed currentcolor;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .exp-detail strong {
+            color: #047857;
+            font-size: 1.15em;
+        }
+
+        .next-btn {
+            background-color: #16a34a;
+            color: #fff;
+            border: none;
+            padding: 16px 30px;
+            font-size: 1.35em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: none;
+            width: 100%;
+            box-shadow: 0 6px 0 #15803d;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #15803d;
+            background-color: #22c55e;
+        }
+
+        #result-screen {
+            display: none;
+        }
+
+        #result-screen h2 {
+            color: #16a34a;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+        }
+
+        .restart-btn {
+            background-color: #f59e0b;
+            color: #fff;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.4em;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 900;
+            margin-top: 25px;
+            box-shadow: 0 6px 0 #d97706;
+            transition: all 0.2s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>🌿 Câu: <span id="current-question">1</span>/20</span>
+            <span>⭐ Điểm: <span id="score">0</span></span>
+        </div>
+
+        <div>
+            <span class="type-badge" id="type-badge">MCQ</span>
+        </div>
+        
+        <div class="instruction" id="instruction">Loading...</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div id="dynamic-area">
+            <!-- Dynamic input or MCQ buttons -->
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục nào! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>🎉 Xuất sắc! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: bold; color: #475569;">Bạn đã hoàn thành trọn bộ 20 từ vựng & Phrasal Verbs!</p>
+        <p style="font-size: 1.6em; font-weight: bold; color: #475569;">Điểm số của bạn: <br><span style="font-size: 2.5em; color: #16a34a;" id="final-score"></span> / 200 ⭐</p>
+        <button class="restart-btn" onclick="restartGame()">Luyện tập lại nhé! 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // KHÁI NIỆM & DANH TỪ/TÍNH TỪ -> MCQ
+            {
+                type: "mcq",
+                word: "landfill",
+                vi: "bãi chôn lấp rác",
+                def: "a place where waste is buried",
+                ex: "Too much household waste ends up in landfills.",
+                options: ["landfill", "habitat", "deforestation", "drought"]
+            },
+            {
+                type: "mcq",
+                word: "habitat",
+                vi: "môi trường sống",
+                def: "the natural home of an animal or plant",
+                ex: "Deforestation destroys the natural habitat of many species.",
+                options: ["habitat", "flood", "fossil fuels", "emissions"]
+            },
+            {
+                type: "mcq",
+                word: "deforestation",
+                vi: "nạn phá rừng",
+                def: "the cutting down of large areas of forest",
+                ex: "Deforestation is one of the main causes of habitat loss.",
+                options: ["deforestation", "sustainable", "carbon footprint", "landfill"]
+            },
+            {
+                type: "mcq",
+                word: "drought",
+                vi: "hạn hán",
+                def: "a long period with little or no rain",
+                ex: "Farmers are struggling because of a severe drought.",
+                options: ["drought", "flood", "renewable", "pollute"]
+            },
+            {
+                type: "mcq",
+                word: "flood",
+                vi: "lũ lụt",
+                def: "a situation in which an area is covered with water",
+                ex: "Heavy rainfall caused serious flooding in the region.",
+                options: ["flood", "drought", "preserve", "habitat"]
+            },
+            {
+                type: "mcq",
+                word: "carbon footprint",
+                vi: "lượng khí thải carbon",
+                def: "the amount of carbon emissions caused by a person or activity",
+                ex: "Travelling by plane can significantly increase your carbon footprint.",
+                options: ["carbon footprint", "fossil fuels", "emissions", "deforestation"]
+            },
+            {
+                type: "mcq",
+                word: "pollute",
+                vi: "gây ô nhiễm",
+                def: "to make air, water or land dirty or harmful",
+                ex: "Factories can pollute nearby rivers if waste is not treated properly.",
+                options: ["pollute", "preserve", "sustainable", "renewable"]
+            },
+            {
+                type: "mcq",
+                word: "preserve",
+                vi: "gìn giữ, bảo tồn",
+                def: "to keep something in its original or good condition",
+                ex: "National parks help preserve forests and wildlife.",
+                options: ["preserve", "pollute", "landfill", "habitat"]
+            },
+            {
+                type: "mcq",
+                word: "sustainable",
+                vi: "bền vững",
+                def: "able to continue without damaging the environment",
+                ex: "We need to develop a more sustainable way of producing food.",
+                options: ["sustainable", "renewable", "drought", "flood"]
+            },
+            {
+                type: "mcq",
+                word: "renewable",
+                vi: "có thể tái tạo",
+                def: "able to be naturally replaced",
+                ex: "Solar and wind power are renewable sources of energy.",
+                options: ["renewable", "sustainable", "carbon footprint", "fossil fuels"]
+            },
+            {
+                type: "mcq",
+                word: "emissions",
+                vi: "khí thải",
+                def: "gas or other substances sent into the air",
+                ex: "Governments must take action to reduce carbon emissions.",
+                options: ["emissions", "fossil fuels", "habitat", "landfill"]
+            },
+            {
+                type: "mcq",
+                word: "raise environmental awareness",
+                vi: "nâng cao nhận thức về môi trường",
+                def: "to make people more aware of environmental issues",
+                ex: "Schools can help raise environmental awareness among young people.",
+                options: ["raise environmental awareness", "carbon footprint", "cut down on", "dispose of"]
+            },
+            {
+                type: "mcq",
+                word: "fossil fuels",
+                vi: "nhiên liệu hóa thạch",
+                def: "fuels such as coal or oil that are formed from the remains of plants over millions of years",
+                ex: "Many countries still rely heavily on fossil fuels.",
+                options: ["fossil fuels", "renewable", "sustainable", "emissions"]
+            },
+
+            // PHRASAL VERBS -> FILL IN THE BLANK
+            {
+                type: "fill",
+                full: "dispose of",
+                blankQ: "Chemicals must be disposed ________ safely to prevent water pollution.",
+                ans: "of",
+                vi: "vứt bỏ, xử lý",
+                def: "to get rid of something",
+                ex: "Chemicals must be disposed of safely to prevent water pollution."
+            },
+            {
+                type: "fill",
+                full: "cut down on",
+                blankQ: "People should cut ________ on their use of single-use plastics.",
+                ans: "down",
+                vi: "cắt giảm",
+                def: "to use or consume less of something",
+                ex: "People should cut down on their use of single-use plastics."
+            },
+            {
+                type: "fill",
+                full: "throw away",
+                blankQ: "Don't throw ________ plastic bottles after using them once.",
+                ans: "away",
+                vi: "vứt đi",
+                def: "to get rid of something as rubbish",
+                ex: "Don't throw away plastic bottles after using them once."
+            },
+            {
+                type: "fill",
+                full: "use up",
+                blankQ: "If we use ________ natural resources too quickly, future generations will suffer.",
+                ans: "up",
+                vi: "sử dụng hết",
+                def: "to use all of something",
+                ex: "If we use up natural resources too quickly, future generations will suffer."
+            },
+            {
+                type: "fill",
+                full: "run out of",
+                blankQ: "Some countries may run out ________ clean water in the future.",
+                ans: "of",
+                vi: "cạn kiệt",
+                def: "to have no more of something available",
+                ex: "Some countries may run out of clean water in the future."
+            },
+            {
+                type: "fill",
+                full: "give off",
+                blankQ: "Cars give ________ harmful gases that contribute to air pollution.",
+                ans: "off",
+                vi: "thải ra, phát ra",
+                def: "to produce or release something such as heat or gas",
+                ex: "Cars give off harmful gases that contribute to air pollution."
+            },
+            {
+                type: "fill",
+                full: "die out",
+                blankQ: "Some species may die ________ if their habitats are destroyed.",
+                ans: "out",
+                vi: "tuyệt chủng, biến mất",
+                def: "to disappear completely",
+                ex: "Some species may die out if their habitats are destroyed."
+            }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const instructionEl = document.getElementById("instruction");
+        const typeBadgeEl = document.getElementById("type-badge");
+        const questionEl = document.getElementById("question");
+        const dynamicAreaEl = document.getElementById("dynamic-area");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // Web Speech API for Pronunciation
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            
+            // Shuffle all 20 questions
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            explanationEl.className = "explanation-box";
+            dynamicAreaEl.innerHTML = "";
+            
+            const currentItem = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            if (currentItem.type === "mcq") {
+                // MCQ mode
+                typeBadgeEl.className = "type-badge badge-mcq";
+                typeBadgeEl.innerText = "TRẮC NGHIỆM TỪ VỰNG";
+                instructionEl.innerText = "Chọn từ tiếng Anh phù hợp với nghĩa sau:";
+                questionEl.className = "question-box";
+                questionEl.innerHTML = `"${currentItem.vi}"`;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = "options-grid";
+                
+                let shuffledOpts = [...currentItem.options].sort(() => Math.random() - 0.5);
+
+                shuffledOpts.forEach(opt => {
+                    const btn = document.createElement("button");
+                    btn.className = "option-btn";
+                    btn.innerText = opt;
+                    if(opt === currentItem.word) btn.dataset.correct = "true";
+                    btn.onclick = () => {
+                        initAudio();
+                        checkMCQ(btn, opt, currentItem);
+                    };
+                    optionsContainer.appendChild(btn);
+                });
+
+                dynamicAreaEl.appendChild(optionsContainer);
+
+            } else {
+                // Fill-in-the-blank mode (Phrasal Verb)
+                typeBadgeEl.className = "type-badge badge-fill";
+                typeBadgeEl.innerText = "ĐIỀN TỪ (PHRASAL VERB)";
+                instructionEl.innerText = "Điền MỘT từ còn thiếu trong cụm động từ:";
+                questionEl.className = "question-box fill-style";
+                
+                const formattedQ = currentItem.blankQ.replace("________", "<span style='color: #0284c7; border-bottom: 3px dashed #0284c7; padding: 0 15px;'>?</span>");
+                questionEl.innerHTML = `${formattedQ} <span class="meaning-sub">💡 Nghĩa: ${currentItem.vi}</span>`;
+
+                dynamicAreaEl.innerHTML = `
+                    <div class="input-area">
+                        <input type="text" id="blank-input" placeholder="Nhập từ cần điền..." autocomplete="off">
+                        <button class="submit-btn" onclick="checkFill()">Kiểm tra ✔️</button>
+                    </div>
+                `;
+
+                const inputEl = document.getElementById("blank-input");
+                inputEl.focus();
+                inputEl.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter" && !inputEl.disabled) {
+                        e.preventDefault();
+                        checkFill();
+                    }
+                });
+            }
+        }
+
+        function checkMCQ(selectedBtn, selectedText, item) {
+            const buttons = document.querySelectorAll(".option-btn");
+            buttons.forEach(btn => btn.disabled = true);
+
+            let titleHTML = "";
+
+            if (selectedText === item.word) {
+                selectedBtn.classList.add("correct-mcq");
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                speakWord(item.word);
+                explanationEl.classList.remove("wrong-bg");
+                titleHTML = `
+                    <span class='exp-title'>
+                        <span>🎉 Chính xác! Bạn giỏi lắm!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.word}')" title='Nghe phát âm'>🔊</button>
+                    </span>`;
+            } else {
+                selectedBtn.classList.add("wrong-mcq");
+                buttons.forEach(btn => {
+                    if(btn.dataset.correct === "true") {
+                        btn.classList.add("correct-mcq");
+                        btn.innerHTML += " ✔️";
+                    }
+                });
+                playSound('wrong');
+                speakWord(item.word);
+                explanationEl.classList.add("wrong-bg");
+                titleHTML = `
+                    <span class='exp-title'>
+                        <span>❌ Rất tiếc! Từ đúng là: <b>${item.word}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${item.word}')" title='Nghe phát âm'>🔊</button>
+                    </span>`;
+            }
+
+            renderExplanation(titleHTML, item.word, item.vi, item.def, item.ex);
+        }
+
+        function checkFill() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("blank-input");
+            const submitBtn = document.querySelector(".submit-btn");
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.ans.toLowerCase();
+
+            if (userAns === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let titleHTML = "";
+
+            if (userAns === correctAns) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound('correct');
+                speakWord(item.full);
+                explanationEl.classList.remove("wrong-bg");
+                titleHTML = `
+                    <span class='exp-title'>
+                        <span>🎉 Chuẩn xác! Bạn điền đúng rồi!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.full}')" title='Nghe phát âm'>🔊</button>
+                    </span>`;
+                questionEl.innerHTML = item.blankQ.replace("________", `<span style='color: #16a34a; font-weight: 900; text-decoration: underline;'>${item.ans}</span>`) + `<span class="meaning-sub">💡 Nghĩa: ${item.vi}</span>`;
+            } else {
+                playSound('wrong');
+                speakWord(item.full);
+                explanationEl.classList.add("wrong-bg");
+                titleHTML = `
+                    <span class='exp-title'>
+                        <span>❌ Chưa chính xác! Từ cần điền là: <b>${item.ans}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${item.full}')" title='Nghe phát âm'>🔊</button>
+                    </span>`;
+                questionEl.innerHTML = item.blankQ.replace("________", `<span style='color: #dc2626; font-weight: 900; text-decoration: underline;'>${item.ans}</span>`) + `<span class="meaning-sub">💡 Nghĩa: ${item.vi}</span>`;
+            }
+
+            renderExplanation(titleHTML, item.full, item.vi, item.def, item.ex);
+        }
+
+        function renderExplanation(titleHTML, term, vi, def, ex) {
+            const expHTML = `
+                ${titleHTML}
+                <div class='exp-detail'>
+                    📌 Cụm từ/Từ vựng: <strong>${term}</strong><br>
+                    🇻🇳 Nghĩa: <b>${vi}</b><br>
+                    📖 Định nghĩa: <i>${def}</i><br>
+                    💡 Ví dụ trong câu: <i>${ex}</i>
+                </div>
+            `;
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "inline-block";
+            nextBtn.focus();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
