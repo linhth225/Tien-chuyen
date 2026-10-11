@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Vocabulary Magic 🛒✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@600;800;900&display=swap');
+
+        :root {
+            --primary: #ec4899; /* Pink */
+            --secondary: #0ea5e9; /* Light Blue */
+            --bg-color: #fdf2f8;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --success: #10b981;
+            --error: #f43f5e;
+            --font-heading: 'Baloo 2', cursive;
+            --font-text: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-text);
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 15% 50%, #fce7f3 0%, transparent 25%),
+                radial-gradient(circle at 85% 30%, #e0f2fe 0%, transparent 25%);
+        }
+
+        .quiz-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 750px;
+            border-radius: 35px;
+            box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
+            padding: 40px;
+            border: 8px solid #fbcfe8;
+            text-align: center;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.3em;
+            background: #fff1f2;
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: 3px dashed #fca5a5;
+            font-family: var(--font-heading);
+        }
+
+        .instruction {
+            font-size: 1.5em;
+            color: var(--secondary);
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+        }
+
+        .meaning-box {
+            background-color: #f0f9ff;
+            color: #0284c7;
+            padding: 15px 20px;
+            border-radius: 20px;
+            font-size: 1.6em;
+            font-weight: 900;
+            margin-bottom: 20px;
+            border: 3px solid #bae6fd;
+            display: inline-block;
+        }
+
+        .phrase-box {
+            font-size: 2em;
+            color: var(--text-main);
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .hint-box {
+            font-size: 1.2em;
+            color: #059669;
+            background-color: #d1fae5;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 25px;
+            border: 2px dashed #34d399;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 75%;
+            padding: 18px 25px;
+            font-size: 1.6em;
+            font-family: var(--font-text);
+            border: 4px solid #bae6fd;
+            border-radius: 25px;
+            text-align: center;
+            color: var(--secondary);
+            font-weight: 900;
+            outline: none;
+            transition: all 0.3s;
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.05);
+            text-transform: lowercase;
+        }
+
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.2);
+        }
+
+        .submit-btn {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 16px 50px;
+            font-size: 1.5em;
+            border-radius: 35px;
+            cursor: pointer;
+            font-weight: 800;
+            font-family: var(--font-heading);
+            box-shadow: 0 6px 0 #be185d;
+            transition: all 0.2s ease;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #be185d;
+            background-color: #f472b6;
+        }
+
+        .submit-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #be185d;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 4px solid #e2e8f0;
+            padding: 25px;
+            border-radius: 25px;
+            color: var(--text-main);
+            text-align: left;
+            animation: bounceIn 0.5s ease;
+            margin-top: 20px;
+        }
+
+        .explanation-box.correct-bg { border-color: #34d399; background-color: #ecfdf5; }
+        .explanation-box.wrong-bg { border-color: #fb7185; background-color: #fff1f2; }
+
+        .exp-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.5em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 3px dashed #cbd5e1;
+            font-family: var(--font-heading);
+        }
+
+        .correct-text { color: var(--success); }
+        .wrong-text { color: var(--error); }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            box-shadow: 0 5px 0 #0284c7;
+            flex-shrink: 0;
+        }
+
+        .audio-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 3px 0 #0284c7;
+            background-color: #38bdf8;
+        }
+
+        .exp-detail {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            border: 2px solid #cbd5e1;
+            font-size: 1.2em;
+        }
+
+        .exp-detail .word {
+            color: var(--primary);
+            font-size: 1.8em;
+            font-weight: 900;
+            font-family: var(--font-heading);
+        }
+
+        .exp-detail .ipa {
+            color: #64748b;
+            font-size: 0.85em;
+            font-family: monospace;
+            background-color: #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .example-box {
+            margin-top: 15px;
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid var(--secondary);
+            font-size: 1.05em;
+            font-style: italic;
+        }
+
+        .usage-box {
+            margin-top: 15px;
+            background-color: #fef3c7;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 5px solid #f59e0b;
+            font-size: 1em;
+            color: #b45309;
+        }
+
+        .next-btn {
+            background-color: var(--success);
+            color: #fff;
+            border: none;
+            padding: 16px 45px;
+            font-size: 1.4em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: var(--font-heading);
+            transition: all 0.2s;
+            display: none;
+            margin: 25px auto 0 auto;
+            box-shadow: 0 6px 0 #047857;
+        }
+
+        .next-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #047857;
+            background-color: #34d399;
+        }
+
+        #result-screen { display: none; }
+
+        #result-screen h2 {
+            color: var(--primary);
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+        }
+
+        .restart-btn {
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.6em;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 900;
+            font-family: var(--font-heading);
+            margin-top: 30px;
+            box-shadow: 0 6px 0 #0284c7;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(2px);
+            box-shadow: 0 4px 0 #0284c7;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container" id="quiz-screen">
+        <div class="header">
+            <span>🌟 Câu: <span id="current-question">1</span>/19</span>
+            <span>🏆 Điểm: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction" id="instruction">Bé hãy gõ từ còn thiếu vào ô trống nhé! 👇</div>
+
+        <div class="meaning-box" id="meaning">Loading...</div>
+        
+        <div class="phrase-box" id="phrase-box"></div>
+        <div class="hint-box" id="hint">Loading...</div>
+
+        <div class="input-area" id="dynamic-area">
+            <input type="text" id="answer-input" placeholder="Gõ từ của bé vào đây..." autocomplete="off">
+            <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra ngay! ✨</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Tiếp tục thôi! ➔</button>
+    </div>
+
+    <div class="quiz-container" id="result-screen">
+        <h2>Giỏi Quá Bé Ơi! 🎉</h2>
+        <p style="font-size: 1.5em; font-weight: 800; color: #475569;">Bé đã học xong tất cả các từ vựng mua sắm rồi!</p>
+        <div style="font-size: 5em; font-weight: 900; color: #0ea5e9; margin: 20px 0;"><span id="final-score"></span> / 190</div>
+        <button class="restart-btn" onclick="restartGame()">Chơi Lại Lần Nữa 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // Từ đơn lẻ (Single words)
+            { type: "single", word: "receipt", hint: "r", vi: "hóa đơn (đã mua hàng/trả tiền)", ipa: "/rɪˈsiːt/", ex: "Keep your receipt in case you need to return the item.", usage: "Dùng để chỉ tờ giấy biên lai cửa hàng đưa cho bạn sau khi đã thanh toán tiền." },
+            { type: "single", word: "refund", hint: "r", vi: "khoản tiền hoàn lại", ipa: "/ˈriːfʌnd/", ex: "The shop gave me a full refund for the damaged product.", usage: "Dùng khi bạn trả lại món hàng bị lỗi và được cửa hàng trả lại số tiền đã mua." },
+            { type: "single", word: "bargain", hint: "b", vi: "món hời", ipa: "/ˈbɑːɡən/", ex: "I found a real bargain at the weekend market.", usage: "Dùng để chỉ một món đồ bạn mua được với giá rất rẻ, rẻ hơn bình thường rất nhiều." },
+            { type: "single", word: "afford", hint: "a", vi: "có đủ khả năng chi trả", ipa: "/əˈfɔːd/", ex: "I can't afford a new phone at the moment.", usage: "Thường đi kèm với 'can' hoặc 'can't' để diễn tả bạn có đủ (hoặc không đủ) tiền để mua một thứ gì đó." },
+            { type: "single", word: "exchange", hint: "e", vi: "đổi (hàng)", ipa: "/ɪksˈtʃeɪndʒ/", ex: "The shop allowed me to exchange the shirt for a larger size.", usage: "Dùng khi bạn mang một món hàng ra cửa hàng để đổi lấy một món khác (ví dụ đổi size, đổi màu)." },
+            { type: "single", word: "browse", hint: "b", vi: "xem hàng, xem qua", ipa: "/braʊz/", ex: "I like to browse in shops when I have free time.", usage: "Dùng để diễn tả hành động đi dạo quanh cửa hàng ngắm nghía đồ đạc mà chưa có ý định mua cụ thể." },
+            { type: "single", word: "affordable", hint: "a", vi: "có giá phải chăng", ipa: "/əˈfɔːdəbl/", ex: "This store sells good-quality clothes at affordable prices.", usage: "Là tính từ dùng để miêu tả một món đồ có mức giá hợp lý, không quá đắt đỏ." },
+            { type: "single", word: "durable", hint: "d", vi: "bền, chắc chắn", ipa: "/ˈdjʊərəbl/", ex: "I prefer durable shoes because I don't want to replace them often.", usage: "Dùng để khen một món đồ rất bền, dùng được lâu dài mà không bị hỏng." },
+            
+            // Cụm từ (Collocations / Phrasal Verbs)
+            { type: "phrase", word: "purchase", phrase: "make a ________", full: "make a purchase", vi: "mua hàng", ipa: "/meɪk ə ˈpɜːtʃəs/", ex: "Customers need to create an account before they can make a purchase.", usage: "Cụm từ trang trọng hơn của từ 'buy' (mua). Thường dùng trong thông báo của cửa hàng hoặc trên website." },
+            { type: "phrase", word: "discount", phrase: "get a ________", full: "get a discount", vi: "được giảm giá", ipa: "/ɡet ə ˈdɪskaʊnt/", ex: "Students can get a discount with a valid student card.", usage: "Dùng khi bạn được mua hàng với giá rẻ hơn niêm yết (nhờ thẻ học sinh, hoặc có mã giảm giá)." },
+            { type: "phrase", word: "value", phrase: "good ________ for money", full: "good value for money", vi: "đáng đồng tiền", ipa: "/ɡʊd ˈvæljuː fə ˈmʌni/", ex: "This jacket is good value for money because it is warm and durable.", usage: "Dùng để khen một món đồ có chất lượng cực kỳ tốt so với số tiền bạn đã bỏ ra để mua nó." },
+            { type: "phrase", word: "in", phrase: "pay ________ cash", full: "pay in cash", vi: "trả bằng tiền mặt", ipa: "/peɪ ɪn kæʃ/", ex: "Some small shops only allow customers to pay in cash.", usage: "Lưu ý giới từ 'in'. Dùng khi bạn dùng tiền giấy hoặc tiền xu vật lý để thanh toán." },
+            { type: "phrase", word: "by", phrase: "pay ________ card", full: "pay by card", vi: "thanh toán bằng thẻ", ipa: "/peɪ baɪ kɑːd/", ex: "I usually pay by card when I go shopping.", usage: "Lưu ý giới từ 'by'. Dùng khi bạn quẹt thẻ ngân hàng (Visa, Mastercard, thẻ ATM) để thanh toán." },
+            { type: "phrase", word: "on", phrase: "try ________", full: "try on", vi: "mặc thử", ipa: "/traɪ ɒn/", ex: "Can I try on this dress before buying it?", usage: "Cụm động từ dùng khi bạn muốn ướm thử quần áo, giày dép xem có vừa vặn không trước khi mua." },
+            { type: "phrase", word: "for", phrase: "look ________", full: "look for", vi: "tìm kiếm", ipa: "/lʊk fɔː(r)/", ex: "I'm looking for a birthday present for my sister.", usage: "Dùng khi bạn đang tìm một thứ gì đó trong cửa hàng (tìm size áo, tìm món đồ cần mua)." },
+            { type: "phrase", word: "out", phrase: "pick ________", full: "pick out", vi: "chọn ra", ipa: "/pɪk aʊt/", ex: "She helped me pick out a gift for my friend.", usage: "Dùng khi bạn lựa chọn kỹ càng một món đồ ưng ý nhất từ trong số rất nhiều món đồ khác." },
+            { type: "phrase", word: "for", phrase: "pay ________", full: "pay for", vi: "trả tiền cho", ipa: "/peɪ fɔː(r)/", ex: "I forgot to pay for the book before leaving the shop.", usage: "Dùng khi nói về việc thanh toán tiền cho một món đồ cụ thể nào đó (Ví dụ: pay for a shirt)." },
+            { type: "phrase", word: "out", phrase: "sell ________", full: "sell out", vi: "bán hết sạch", ipa: "/sel aʊt/", ex: "The concert T-shirts sold out within a few hours.", usage: "Dùng khi một món hàng nào đó ở cửa hàng đã được khách mua hết, không còn hàng tồn kho." },
+            { type: "phrase", word: "back on", phrase: "cut ________", full: "cut back on", vi: "cắt giảm (chi tiêu)", ipa: "/kʌt bæk ɒn/", ex: "I'm trying to cut back on unnecessary shopping this month.", usage: "Dùng khi bạn quyết định tiêu ít tiền lại, hoặc giảm bớt việc mua sắm những thứ không cần thiết." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const instructionEl = document.getElementById("instruction");
+        const meaningEl = document.getElementById("meaning");
+        const phraseBoxEl = document.getElementById("phrase-box");
+        const hintEl = document.getElementById("hint");
+        const inputEl = document.getElementById("answer-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Web Audio API
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(isCorrect) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (isCorrect) {
+                // Happy sound for kids
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.15); // E5
+                oscillator.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.3); // G5
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.5);
+            } else {
+                // Sad sound for kids
+                oscillator.type = 'triangle';
+                oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+                oscillator.frequency.linearRampToValueAtTime(150, audioCtx.currentTime + 0.4);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.4);
+            }
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8; // Slower for kids
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Global Enter Key Listener
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const resultScreen = document.getElementById("result-screen");
+                if (resultScreen.style.display === "block") return;
+
+                if (nextBtn.style.display === "block") {
+                    event.preventDefault();
+                    nextQuestion();
+                } else if (submitBtn.style.display !== "none") {
+                    event.preventDefault();
+                    checkAnswer();
+                }
+            }
+        });
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            
+            const item = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            meaningEl.innerHTML = `🇻🇳 ${item.vi}`;
+
+            if (item.type === "single") {
+                phraseBoxEl.style.display = "none";
+                hintEl.innerHTML = `💡 Bắt đầu bằng chữ cái: <b>"${item.hint.toUpperCase()}"</b>`;
+            } else {
+                phraseBoxEl.style.display = "block";
+                const formattedQ = item.phrase.replace("________", `<span style="color: #cbd5e1; border-bottom: 4px dashed #94a3b8; padding: 0 25px;">?</span>`);
+                phraseBoxEl.innerHTML = formattedQ;
+                hintEl.innerHTML = `💡 Điền từ còn thiếu vào chỗ trống nhé!`;
+            }
+
+            inputEl.value = "";
+            inputEl.disabled = false;
+            submitBtn.style.display = "block";
+            inputEl.focus();
+        }
+
+        function checkAnswer() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.word.toLowerCase();
+
+            if (userAns === "") {
+                inputEl.style.animation = "shake 0.3s";
+                setTimeout(() => inputEl.style.animation = "", 300);
+                return;
+            }
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let isCorrect = userAns === correctAns;
+            let headerHTML = "";
+
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.className = "explanation-box correct-bg";
+                headerHTML = `
+                    <div class='exp-header correct-text'>
+                        <span>🎉 Chính xác! Bé giỏi quá!</span>
+                        <button class='audio-btn' onclick="speakWord('${item.full || item.word}')" title='Nghe đọc'>🔊</button>
+                    </div>`;
+                
+                if(item.type === "phrase") {
+                    phraseBoxEl.innerHTML = item.phrase.replace("________", `<span style="color: #10b981; border-bottom: 4px solid #10b981; padding: 0 10px;">${item.word}</span>`);
+                }
+
+            } else {
+                playSound(false);
+                explanationEl.className = "explanation-box wrong-bg";
+                headerHTML = `
+                    <div class='exp-header wrong-text'>
+                        <span>❌ Sai rồi! Đáp án đúng là:</span>
+                        <button class='audio-btn' onclick="speakWord('${item.full || item.word}')" title='Nghe đọc'>🔊</button>
+                    </div>`;
+                
+                if(item.type === "phrase") {
+                    phraseBoxEl.innerHTML = item.phrase.replace("________", `<span style="color: #f43f5e; border-bottom: 4px solid #f43f5e; text-decoration: line-through; padding: 0 10px;">${userAns}</span> <span style="color: #10b981;">${item.word}</span>`);
+                }
+            }
+
+            // Đọc tự động
+            speakWord(item.full || item.word);
+
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-detail'>
+                    <span class='word'>${item.full || item.word}</span> <span class='ipa'>${item.ipa}</span><br>
+                    
+                    <div class="usage-box">
+                        <b>📝 Cách dùng:</b> ${item.usage}
+                    </div>
+
+                    <div class="example-box">
+                        <b>💬 Ví dụ:</b><br>
+                        ${item.ex}
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            
+            setTimeout(() => {
+                nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
