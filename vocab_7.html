@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food & Health Vocabulary 🥗</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #1e3a8a; /* Navy Blue */
+            --secondary: #b45309; /* Bronze */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --error: #e11d48;
+            --error-bg: #fff1f2;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 0% 0%, #e2e8f0 0%, transparent 20%),
+                radial-gradient(circle at 100% 100%, #e2e8f0 0%, transparent 20%);
+        }
+
+        .game-container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 850px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px -10px rgba(30, 58, 138, 0.1);
+            padding: 40px;
+            border-top: 6px solid var(--primary);
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 800;
+            font-size: 1.1em;
+            color: var(--primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .badge-area { margin-bottom: 15px; text-align: center; }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background-color: #fef3c7; 
+            color: #b45309;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.15em;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .question-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            font-family: var(--font-heading);
+            font-size: 1.7em;
+            color: var(--primary);
+            font-weight: 700;
+            line-height: 1.5;
+            background-color: #f8fafc;
+        }
+
+        .vietnamese-meaning {
+            font-family: var(--font-body);
+            font-size: 0.75em;
+            color: var(--secondary);
+            font-weight: 700;
+            display: block;
+            margin-bottom: 15px;
+            text-transform: none;
+            letter-spacing: normal;
+            border-bottom: 1px dashed #cbd5e1;
+            padding-bottom: 15px;
+        }
+        
+        .hint-text {
+            font-family: var(--font-body);
+            font-size: 0.7em;
+            color: #475569;
+            font-weight: 600;
+            display: block;
+            margin-top: 10px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        /* Fill in Blank Styles */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 15px 20px;
+            font-size: 1.3em;
+            font-family: var(--font-body);
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #172554;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.2);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background-color: var(--success);
+            margin-top: 25px;
+        }
+
+        .btn-next:hover { background-color: #047857; }
+
+        /* Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 25px;
+            border-radius: 16px;
+            color: var(--text-main);
+            line-height: 1.6;
+            animation: fadeIn 0.4s ease;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        .explanation-box.is-correct { border-left: 6px solid var(--success); }
+        .explanation-box.is-wrong { border-left: 6px solid var(--error); }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 1.2em;
+            font-weight: 800;
+        }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .audio-btn:hover { background-color: #92400e; transform: scale(1.1); }
+
+        .exp-content {
+            background-color: var(--bg-body);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .exp-word {
+            color: var(--primary);
+            font-size: 1.6em;
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+        
+        .exp-ipa {
+            color: var(--text-muted);
+            font-family: monospace;
+            background-color: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-left: 10px;
+            font-size: 0.9em;
+        }
+
+        .usage-box {
+            background-color: #fffbeb;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .example-box {
+            background-color: #ffffff;
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+            border-top: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* Result Screen */
+        #result-screen { display: none; text-align: center; }
+        #result-screen h2 { font-family: var(--font-heading); color: var(--primary); font-size: 2.5em; }
+        .final-score { font-size: 4em; font-weight: 800; color: var(--secondary); margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="game-container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-question">1</span>/24</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+
+        <div class="badge-area">
+            <span class="badge" id="badge-text">ĐIỀN TỪ (FILL IN THE BLANK)</span>
+        </div>
+        <div class="instruction" id="instruction-text">Điền MỘT từ còn thiếu vào chỗ trống để tạo thành từ/cụm từ hoàn chỉnh:</div>
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div class="input-group">
+            <input type="text" id="blank-input" placeholder="Gõ từ cần điền..." autocomplete="off">
+            <button class="btn-primary" id="submit-btn" onclick="checkFill()">Kiểm tra</button>
+        </div>
+        
+        <div class="explanation-box" id="explanation"></div>
+        <button class="btn-primary btn-next" id="next-btn" onclick="nextQuestion()">Tiếp Tục ➔</button>
+    </div>
+
+    <div class="game-container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎓</h2>
+        <p style="font-size: 1.2em; color: var(--text-muted);">Bạn đã hoàn thành xuất sắc bài kiểm tra Food & Health.</p>
+        <div class="final-score"><span id="final-score"></span> / 240</div>
+        <button class="btn-primary" onclick="restartGame()">Luyện Tập Lại 🔄</button>
+    </div>
+
+    <script>
+        const quizData = [
+            // Từ đơn lẻ (Single words)
+            { type: "single", ans: "appetite", vi: "cảm giác thèm ăn", pos: "noun", hint: "a", ipa: "/ˈæpɪtaɪt/", eng_def: "a desire to eat", ex: "I don't have much appetite in the morning." },
+            { type: "single", ans: "ingredient", vi: "nguyên liệu", pos: "noun", hint: "i", ipa: "/ɪnˈɡriːdiənt/", eng_def: "a food used to make a dish", ex: "Fresh vegetables are important ingredients in this dish." },
+            { type: "single", ans: "portion", vi: "khẩu phần", pos: "noun", hint: "p", ipa: "/ˈpɔːʃn/", eng_def: "an amount of food for one person", ex: "The restaurant serves large portions." },
+            { type: "single", ans: "dish", vi: "món ăn", pos: "noun", hint: "d", ipa: "/dɪʃ/", eng_def: "a particular type of food", ex: "Pho is a popular Vietnamese dish." },
+            { type: "single", ans: "beverage", vi: "đồ uống", pos: "noun", hint: "b", ipa: "/ˈbevərɪdʒ/", eng_def: "a drink", ex: "Water is the healthiest beverage." },
+            { type: "single", ans: "cuisine", vi: "nền ẩm thực", pos: "noun", hint: "c", ipa: "/kwɪˈziːn/", eng_def: "a style of cooking", ex: "I really enjoy Italian cuisine." },
+            { type: "single", ans: "snack", vi: "đồ ăn nhẹ", pos: "noun", hint: "s", ipa: "/snæk/", eng_def: "a small amount of food", ex: "I usually have a fruit snack in the afternoon." },
+            { type: "single", ans: "consume", vi: "tiêu thụ, ăn/uống", pos: "verb", hint: "c", ipa: "/kənˈsjuːm/", eng_def: "to eat or drink something", ex: "People should consume less sugar." },
+            { type: "single", ans: "satisfy", vi: "làm thỏa mãn", pos: "verb", hint: "s", ipa: "/ˈsætɪsfaɪ/", eng_def: "to make someone feel that they have had enough", ex: "A healthy meal can satisfy your hunger." },
+            { type: "single", ans: "digest", vi: "tiêu hóa", pos: "verb", hint: "d", ipa: "/daɪˈdʒest/", eng_def: "to process food in your body", ex: "Some people cannot digest dairy products well." },
+            { type: "single", ans: "season", vi: "nêm gia vị", pos: "verb", hint: "s", ipa: "/ˈsiːzən/", eng_def: "to add salt, herbs, etc. to food", ex: "Season the soup with a little salt." },
+            { type: "single", ans: "nutritious", vi: "bổ dưỡng", pos: "adj", hint: "n", ipa: "/njuˈtrɪʃəs/", eng_def: "containing things that are good for health", ex: "Eggs are cheap and nutritious." },
+            { type: "single", ans: "spicy", vi: "cay", pos: "adj", hint: "s", ipa: "/ˈspaɪsi/", eng_def: "having a strong hot flavour", ex: "I like spicy food, but not extremely hot dishes." },
+
+            // Cụm từ (Idioms/Collocations/Phrasal Verbs)
+            { type: "phrase", ans: "balanced", full: "balanced diet", phrase: "________ diet", vi: "chế độ ăn cân bằng", pos: "collocation", hint: "b", ipa: "/ˌbælənst ˈdaɪət/", eng_def: "a diet with different healthy foods", ex: "Teenagers need a balanced diet." },
+            { type: "phrase", ans: "junk", full: "junk food", phrase: "________ food", vi: "đồ ăn nhanh/không lành mạnh", pos: "collocation", hint: "j", ipa: "/ˈdʒʌŋk fuːd/", eng_def: "unhealthy food with little nutrition", ex: "I try not to eat too much junk food." },
+            { type: "phrase", ans: "home-cooked", full: "home-cooked meal", phrase: "________ meal", vi: "bữa ăn tự nấu", pos: "collocation", hint: "h", ipa: "/ˌhəʊm kʊkt ˈmiːl/", eng_def: "a meal prepared at home", ex: "I prefer a home-cooked meal to restaurant food." },
+            { type: "phrase", ans: "eat", full: "eat out", phrase: "________ out", vi: "ăn ngoài", pos: "phrasal verb", hint: "e", ipa: "/iːt aʊt/", eng_def: "to eat at a restaurant", ex: "We usually eat out at weekends." },
+            { type: "phrase", ans: "down", full: "cut down on", phrase: "cut ________ on", vi: "cắt giảm", pos: "phrasal verb", hint: "d", ipa: "/kʌt daʊn ɒn/", eng_def: "to consume less of something", ex: "I'm trying to cut down on sugary drinks." },
+            { type: "phrase", ans: "up", full: "give up", phrase: "give ________", vi: "từ bỏ", pos: "phrasal verb", hint: "u", ipa: "/ɡɪv ʌp/", eng_def: "to stop doing or having something", ex: "He gave up drinking coffee late at night." },
+            { type: "phrase", ans: "away", full: "take away", phrase: "take ________", vi: "mua đồ ăn mang đi", pos: "phrasal verb", hint: "a", ipa: "/teɪk əˈweɪ/", eng_def: "to buy food to eat somewhere else", ex: "Let's take away some noodles for dinner." },
+            { type: "phrase", ans: "up", full: "eat up", phrase: "eat ________", vi: "ăn hết", pos: "phrasal verb", hint: "u", ipa: "/iːt ʌp/", eng_def: "to eat all of something", ex: "Eat up your vegetables before you have dessert." },
+            { type: "phrase", ans: "up", full: "drink up", phrase: "drink ________", vi: "uống hết", pos: "phrasal verb", hint: "u", ipa: "/drɪŋk ʌp/", eng_def: "to finish a drink", ex: "Drink up your water before we leave." },
+            { type: "phrase", ans: "tooth", full: "have a sweet tooth", phrase: "have a sweet ________", vi: "thích đồ ngọt", pos: "idiom", hint: "t", ipa: "/hæv ə swiːt tuːθ/", eng_def: "to like sweet food", ex: "I have a sweet tooth, so I love chocolate." },
+            { type: "phrase", ans: "skip", full: "skip a meal", phrase: "________ a meal", vi: "bỏ bữa", pos: "collocation", hint: "s", ipa: "/skɪp ə miːl/", eng_def: "not eat a meal", ex: "I sometimes skip breakfast when I'm in a hurry." }
+        ];
+
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById("question");
+        const explanationEl = document.getElementById("explanation");
+        const nextBtn = document.getElementById("next-btn");
+        const scoreEl = document.getElementById("score");
+        const currentQEl = document.getElementById("current-question");
+
+        // Audio Setup
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSound(isCorrect) {
+            if (!audioCtx) return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (isCorrect) {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                oscillator.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.1); 
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            } else {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(250, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            }
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // LỌC TỪ THỪA KHI ĐỌC (Ẩn sth, sb, someone)
+        function cleanTextForSpeech(text) {
+            return text.replace(/someone|something|sb|sth|one's/gi, '')
+                       .replace(/\s+/g, ' ')
+                       .trim();
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const cleanText = cleanTextForSpeech(text);
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'en-US'; 
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                const resultScreen = document.getElementById("result-screen");
+                if (resultScreen.style.display === "block") return;
+
+                if (nextBtn.style.display === "block") {
+                    event.preventDefault();
+                    nextQuestion();
+                } else {
+                    const submitBtn = document.getElementById("submit-btn");
+                    if (submitBtn && submitBtn.style.display !== "none" && !submitBtn.disabled) {
+                        event.preventDefault();
+                        checkFill();
+                    }
+                }
+            }
+        });
+
+        function initGame() {
+            document.body.addEventListener('click', initAudio, { once: true });
+            currentQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            currentQuestionIndex = 0;
+            score = 0;
+            scoreEl.innerText = score;
+            document.getElementById("quiz-screen").style.display = "block";
+            document.getElementById("result-screen").style.display = "none";
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            nextBtn.style.display = "none";
+            explanationEl.style.display = "none";
+            
+            const item = currentQuestions[currentQuestionIndex];
+            currentQEl.innerText = currentQuestionIndex + 1;
+
+            if (item.type === "single") {
+                document.getElementById("badge-text").innerText = "TỪ VỰNG ĐƠN LẺ";
+                document.getElementById("instruction-text").innerText = "Điền từ tiếng Anh có nghĩa là:";
+                questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span> 
+                                        <span class="hint-text">Gợi ý: Bắt đầu bằng chữ "${item.hint.toUpperCase()}" (${item.pos})</span>`;
+            } else {
+                document.getElementById("badge-text").innerText = "CỤM TỪ & THÀNH NGỮ";
+                document.getElementById("instruction-text").innerText = "Điền MỘT từ còn thiếu vào chỗ trống để tạo thành cụm từ hoàn chỉnh:";
+                const formattedQ = item.phrase.replace("________", `<span style="color: var(--text-muted); border-bottom: 2px dashed var(--text-muted); padding: 0 30px;">?</span>`);
+                questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span> ${formattedQ}
+                                        <span class="hint-text">Gợi ý: Bắt đầu bằng chữ "${item.hint.toUpperCase()}" (${item.pos})</span>`;
+            }
+
+            document.getElementById("blank-input").value = "";
+            document.getElementById("blank-input").disabled = false;
+            document.getElementById("submit-btn").style.display = "block";
+
+            setTimeout(() => {
+                const inp = document.getElementById("blank-input");
+                if(inp) inp.focus();
+            }, 100);
+        }
+
+        function checkFill() {
+            initAudio();
+            const item = currentQuestions[currentQuestionIndex];
+            const inputEl = document.getElementById("blank-input");
+            const submitBtn = document.getElementById("submit-btn");
+
+            const userAns = inputEl.value.trim().toLowerCase();
+            const correctAns = item.ans.toLowerCase();
+
+            if (userAns === "") return;
+
+            inputEl.disabled = true;
+            submitBtn.style.display = "none";
+
+            let isCorrect = userAns === correctAns;
+            let headerHTML = "";
+            
+            let fullWordToDisplay = item.type === "single" ? item.ans : item.full;
+
+            if (isCorrect) {
+                score += 10;
+                scoreEl.innerText = score;
+                playSound(true);
+                explanationEl.className = "explanation-box is-correct";
+                
+                if(item.type === "single") {
+                    questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span><span style="color: var(--success);">${item.ans}</span>`;
+                } else {
+                    questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span>` + item.phrase.replace("________", `<span style="color: var(--success); border-bottom: 2px solid var(--success); padding: 0 10px;">${item.ans}</span>`);
+                }
+
+                headerHTML = `
+                    <div class='exp-header'>
+                        <span style="color: var(--success);">🎉 Hoàn toàn chính xác!</span>
+                        <button class='audio-btn' onclick="speakWord('${fullWordToDisplay.replace(/'/g, "\'")}')">🔊</button>
+                    </div>`;
+            } else {
+                playSound(false);
+                explanationEl.className = "explanation-box is-wrong";
+                
+                if(item.type === "single") {
+                    questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span><span style="color: var(--error); text-decoration: line-through;">${userAns}</span> <span style="color: var(--success);">${item.ans}</span>`;
+                } else {
+                    questionEl.innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${item.vi}</span>` + item.phrase.replace("________", `<span style="color: var(--error); text-decoration: line-through;">${userAns}</span> <span style="color: var(--success);">${item.ans}</span>`);
+                }
+
+                headerHTML = `
+                    <div class='exp-header'>
+                        <span style="color: var(--error);">❌ Từ đúng phải là: <b>${item.ans}</b></span>
+                        <button class='audio-btn' onclick="speakWord('${fullWordToDisplay.replace(/'/g, "\'")}')">🔊</button>
+                    </div>`;
+            }
+
+            speakWord(fullWordToDisplay);
+
+            const expHTML = `
+                ${headerHTML}
+                <div class='exp-content'>
+                    <span class='exp-word'>${fullWordToDisplay}</span> <span class='exp-ipa'>${item.ipa}</span>
+                    <div class="usage-box">
+                        <b>Nghĩa tiếng Anh:</b> ${item.eng_def}
+                    </div>
+                    <div class="example-box">
+                        <b>Ví dụ ngữ cảnh:</b> "${item.ex}"
+                    </div>
+                </div>
+            `;
+            
+            explanationEl.innerHTML = expHTML;
+            explanationEl.style.display = "block";
+            nextBtn.style.display = "block";
+            setTimeout(() => { nextBtn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuestions.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").style.display = "none";
+                document.getElementById("result-screen").style.display = "block";
+                document.getElementById("final-score").innerText = score;
+            }
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
