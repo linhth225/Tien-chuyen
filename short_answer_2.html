@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Vocabulary Challenge 🎯</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #0284c7; /* Sky blue */
+            --secondary: #ea580c; /* Orange for highlights */
+            --bg-main: #f0f9ff; 
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --success: #16a34a;
+            --error: #e11d48;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'Nunito', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 10% 20%, #e0f2fe 0%, transparent 20%),
+                              radial-gradient(circle at 90% 80%, #bae6fd 0%, transparent 20%);
+        }
+
+        .container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px -5px rgba(2, 132, 199, 0.15);
+            padding: 40px;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.2em;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .instruction {
+            text-align: center;
+            font-size: 1.1em;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .question-box {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+            font-family: var(--font-heading);
+            font-size: 1.8em;
+            color: var(--primary);
+            font-weight: 700;
+            background-color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        .vietnamese-meaning {
+            font-family: var(--font-body);
+            font-size: 0.8em;
+            color: var(--secondary);
+            display: block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .hint-text {
+            font-family: var(--font-body);
+            font-size: 0.6em;
+            color: #475569;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: 700;
+            background: #e2e8f0;
+            padding: 8px 18px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 15px;
+            font-size: 1.4em;
+            font-family: var(--font-body);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            text-align: center;
+            color: var(--primary);
+            font-weight: 700;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 45px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(2, 132, 199, 0.3);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.4);
+            background-color: #0369a1;
+        }
+        
+        .btn-next { background-color: var(--success); box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.3); }
+        .btn-next:hover:not(:disabled) { background-color: #15803d; box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.4); }
+
+        .explanation-box {
+            display: none;
+            background-color: white;
+            border: 2px solid #e2e8f0;
+            padding: 25px;
+            margin-top: 30px;
+            border-radius: 16px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .explanation-box.correct { border-color: var(--success); }
+        .explanation-box.wrong { border-color: var(--error); }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 1.3em;
+            font-weight: 800;
+        }
+
+        .audio-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .audio-btn:hover { transform: scale(1.1); background-color: #c2410c; }
+
+        .exp-content { font-size: 1.1em; line-height: 1.6; }
+        .exp-word { color: var(--primary); font-size: 1.5em; font-family: var(--font-heading); font-weight: 700; display: block; margin-bottom: 10px; }
+        .exp-ipa { font-family: monospace; color: var(--text-muted); font-size: 0.9em; background: #f1f5f9; padding: 4px 10px; border-radius: 5px; margin-left: 10px; }
+        
+        .example-box {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-left: 4px solid var(--secondary);
+            border-radius: 8px;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        #result-screen { display: none; text-align: center; }
+        #result-screen h2 { font-family: var(--font-heading); color: var(--primary); font-size: 2.8em; margin-bottom: 10px; }
+        .final-score { font-size: 4.5em; font-weight: 900; color: var(--secondary); margin: 20px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz-screen">
+        <div class="header">
+            <span>📚 CÂU HỎI: <span id="current-q">1</span>/15</span>
+            <span>🏆 ĐIỂM: <span id="score">0</span></span>
+        </div>
+        
+        <div class="instruction">Điền từ tiếng Anh có nghĩa tương ứng vào ô trống:</div>
+        
+        <div class="question-box" id="question">Loading...</div>
+        
+        <div class="input-group">
+            <input type="text" id="answer-input" placeholder="Gõ từ cần điền..." autocomplete="off">
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra</button>
+        </div>
+
+        <div class="explanation-box" id="explanation"></div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-next" id="next-btn" style="display: none;" onclick="nextQuestion()">Tiếp Tục ➔</button>
+        </div>
+    </div>
+
+    <div class="container" id="result-screen">
+        <h2>Xin Chúc Mừng! 🎉</h2>
+        <p style="font-size: 1.2em; color: var(--text-muted);">Bạn đã hoàn thành xuất sắc bài tập từ vựng.</p>
+        <div class="final-score"><span id="final-score">0</span>/150</div>
+        <button class="btn" onclick="location.reload()">Chơi Lại 🔄</button>
+    </div>
+
+    <script>
+        // Dữ liệu 15 câu trích xuất từ hình ảnh
+        const quizData = [
+            { ans: "creature", vi: "sinh vật", pos: "danh từ", hint: "c", ipa: "/ˈkriːtʃər/", def: "living thing, animal", ex: "The ocean is home to many strange creatures." },
+            { ans: "camouflage", vi: "sự ngụy trang", pos: "danh từ", hint: "c", ipa: "/ˈkæməflɑːʒ/", def: "disguise", ex: "The octopus uses camouflage to hide from enemies." },
+            { ans: "react", vi: "phản ứng", pos: "động từ", hint: "r", ipa: "/riˈækt/", def: "respond", ex: "The animal reacts quickly when it feels danger." },
+            { ans: "blend in", vi: "hòa lẫn, hòa vào", pos: "cụm động từ", hint: "b", ipa: "/blend ɪn/", def: "fit in", ex: "The lizard blends in with the sand." },
+            { ans: "predator", vi: "động vật săn mồi", pos: "danh từ", hint: "p", ipa: "/ˈpredətər/", def: "hunter, attacker", ex: "Small animals hide to escape predators." },
+            { ans: "carnivorous", vi: "ăn thịt", pos: "tính từ", hint: "c", ipa: "/kɑːˈnɪvərəs/", def: "meat-eating", ex: "Lions are carnivorous animals." },
+            { ans: "nutrient", vi: "chất dinh dưỡng", pos: "danh từ", hint: "n", ipa: "/ˈnjuːtriənt/", def: "nourishment", ex: "Plants need nutrients to grow well." },
+            { ans: "method", vi: "phương pháp", pos: "danh từ", hint: "m", ipa: "/ˈmeθəd/", def: "way", ex: "The teacher uses different methods in class." },
+            { ans: "photosynthesis", vi: "quang hợp", pos: "danh từ", hint: "p", ipa: "/ˌfəʊtəʊˈsɪnθəsɪs/", def: "food-making process", ex: "Plants use photosynthesis to make food." },
+            { ans: "capture", vi: "bắt, tóm", pos: "động từ", hint: "c", ipa: "/ˈkæptʃər/", def: "catch, trap", ex: "The plant can capture small insects." },
+            { ans: "graduate", vi: "sinh viên tốt nghiệp", pos: "danh từ", hint: "g", ipa: "/ˈɡrædʒuət/", def: "degree holder", ex: "She is a university graduate." },
+            { ans: "academic", vi: "thuộc học thuật", pos: "tính từ", hint: "a", ipa: "/ˌækəˈdemɪk/", def: "educational, scholarly", ex: "He has strong academic skills." },
+            { ans: "theory", vi: "lý thuyết", pos: "danh từ", hint: "t", ipa: "/ˈθɪəri/", def: "idea, explanation", ex: "The theory explains how plants grow." },
+            { ans: "qualification", vi: "bằng cấp, trình độ", pos: "danh từ", hint: "q", ipa: "/ˌkwɒlɪfɪˈkeɪʃən/", def: "certificate, degree", ex: "This job needs a teaching qualification." },
+            { ans: "employer", vi: "nhà tuyển dụng", pos: "danh từ", hint: "e", ipa: "/ɪmˈplɔɪər/", def: "boss, company", ex: "The employer offers good training." }
+        ];
+
+        let questions = [...quizData].sort(() => Math.random() - 0.5);
+        let currIdx = 0, score = 0;
+        
+        const el = id => document.getElementById(id);
+        let audioCtx;
+
+        function initAudio() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSnd(isCorr) {
+            initAudio(); 
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            
+            if(isCorr) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1); 
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+            }
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // BỘ LỌC ĐỌC ÂM THANH (Xử lý sth, sb, someone/something)
+        function cleanForTTS(txt) {
+            return txt.replace(/\bsomeone\/something\b/gi, 'someone or something')
+                      .replace(/\bsomebody\b/gi, 'somebody')
+                      .replace(/\bsomething\b/gi, 'something')
+                      .replace(/\bsb\b/gi, 'somebody')
+                      .replace(/\bsth\b/gi, 'something')
+                      .replace(/[\(\)\/]/g, ' ')
+                      .replace(/\s+/g, ' ').trim();
+        }
+
+        function speak(txt) {
+            if('speechSynthesis' in window) {
+                speechSynthesis.cancel();
+                let u = new SpeechSynthesisUtterance(cleanForTTS(txt));
+                u.lang = 'en-US'; u.rate = 0.9;
+                speechSynthesis.speak(u);
+            }
+        }
+
+        function loadQ() {
+            el('next-btn').style.display = 'none';
+            el('explanation').style.display = 'none';
+            
+            let q = questions[currIdx];
+            el('current-q').innerText = currIdx + 1;
+            
+            el('question').innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${q.vi}</span>
+                                        <span class="hint-text">Bắt đầu bằng chữ '${q.hint.toUpperCase()}' (${q.pos})</span>`;
+            
+            el('answer-input').value = "";
+            el('answer-input').disabled = false;
+            el('submit-btn').style.display = 'block';
+            setTimeout(() => el('answer-input').focus(), 100);
+        }
+
+        function checkAnswer() {
+            let q = questions[currIdx];
+            let input = el('answer-input').value.trim().toLowerCase();
+            if(input === "") return;
+
+            el('answer-input').disabled = true;
+            el('submit-btn').style.display = 'none';
+
+            let isCorr = input === q.ans.toLowerCase();
+            
+            if(isCorr) {
+                score += 10; el('score').innerText = score;
+                playSnd(true);
+                el('explanation').className = "explanation-box correct";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${q.vi}</span> 
+                                            <span style="color:var(--success); text-decoration:underline;">${q.ans}</span>`;
+            } else {
+                playSnd(false);
+                el('explanation').className = "explanation-box wrong";
+                el('question').innerHTML = `<span class="vietnamese-meaning">💡 Nghĩa: ${q.vi}</span> 
+                                            <span style="text-decoration:line-through; color:var(--error); margin-right: 10px;">${input}</span> 
+                                            <span style="color:var(--success); text-decoration:underline;">${q.ans}</span>`;
+            }
+
+            speak(q.ans);
+
+            let safeString = q.ans.replace(/'/g, "&apos;");
+
+            el('explanation').innerHTML = `
+                <div class="exp-header">
+                    <span style="color:var(--${isCorr?'success':'error'})">${isCorr?'🎉 Chính xác!':'❌ Sai rồi!'}</span>
+                    <button class="audio-btn" onclick="speak('${safeString}')">🔊</button>
+                </div>
+                <div class="exp-content">
+                    <span class="exp-word">${q.ans} <span class="exp-ipa">${q.ipa}</span></span>
+                    <div><b>Giải nghĩa:</b> ${q.def}</div>
+                    <div class="example-box"><b>Ví dụ ngữ cảnh:</b> "${q.ex}"</div>
+                </div>
+            `;
+            
+            el('explanation').style.display = 'block';
+            el('next-btn').style.display = 'block';
+            setTimeout(() => { el('next-btn').scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+        }
+
+        function nextQuestion() {
+            currIdx++;
+            if(currIdx < questions.length) loadQ();
+            else {
+                el('quiz-screen').style.display = 'none';
+                el('result-screen').style.display = 'block';
+                el('final-score').innerText = score;
+            }
+        }
+
+        document.addEventListener('keydown', e => {
+            if(e.key === 'Enter') {
+                if(el('next-btn').style.display === 'block') nextQuestion();
+                else if(el('submit-btn').style.display === 'block' && !el('answer-input').disabled) checkAnswer();
+            }
+        });
+
+        window.onload = () => { 
+            document.body.addEventListener('click', initAudio, {once:true}); 
+            loadQ(); 
+        };
+    </script>
+</body>
+</html>
