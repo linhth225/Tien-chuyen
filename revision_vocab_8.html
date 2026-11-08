@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision - Vocab 8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6B46C1;
+            --secondary: #4299E1;
+            --background: #f7fafc;
+            --card-bg: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --success: #38a169;
+            --error: #e53e3e;
+            --highlight: #ecc94b;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #ebf4f5 0%, #b5c6e0 100%);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            padding: 40px;
+            width: 90%;
+            max-width: 750px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .game-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #F6AD55, #ED64A6, #667EEA);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            margin-top: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .progress {
+            font-size: 1.1em;
+            color: var(--text-light);
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: inline-block;
+            background: #edf2f7;
+            padding: 6px 18px;
+            border-radius: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .meaning-vi {
+            font-size: 1.8em;
+            color: #2D3748;
+            font-weight: 800;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+
+        .meta-tags {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 700;
+        }
+
+        .tag-type {
+            background-color: #EBF4FF;
+            color: #3182CE;
+            border: 2px solid #BEE3F8;
+        }
+
+        .tag-hint {
+            background-color: #FEFCBF;
+            color: #D69E2E;
+            border: 2px solid #F6E05E;
+        }
+        
+        .tag-word-count {
+            background-color: #F0FFF4;
+            color: #2F855A;
+            border: 2px solid #9AE6B4;
+        }
+
+        .input-container {
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            font-size: 1.5em;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            text-align: center;
+            border: 4px dashed #CBD5E0;
+            border-radius: 16px;
+            padding: 12px 20px;
+            outline: none;
+            background: #fff;
+            color: var(--primary);
+            width: 80%;
+            max-width: 450px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="text"]:focus {
+            border-color: #9F7AEA;
+            border-style: solid;
+            box-shadow: 0 0 0 4px rgba(159, 122, 234, 0.3);
+            transform: scale(1.02);
+        }
+        
+        input[type="text"].wrong-input {
+            text-decoration: line-through;
+            color: #e53e3e;
+            opacity: 0.8;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), #9F7AEA);
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.3em;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+            box-shadow: 0 4px 15px rgba(107, 70, 193, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(107, 70, 193, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .explanation-area {
+            margin-top: 30px;
+            text-align: left;
+            background: #fff;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 25px;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .explanation-area.show {
+            display: block;
+        }
+
+        .status-msg {
+            font-size: 1.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .status-msg.correct { color: var(--success); }
+        .status-msg.incorrect { color: var(--error); }
+
+        .info-row {
+            margin-bottom: 15px;
+            font-size: 1.15em;
+            line-height: 1.6;
+        }
+        
+        .info-label {
+            font-weight: 800;
+            color: #4A5568;
+            display: inline-block;
+            width: 110px;
+        }
+
+        .ipa-text {
+            font-family: 'Arial', sans-serif;
+            color: #E53E3E;
+            font-weight: bold;
+            background: #FFF5F5;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 1em;
+            border: 1px solid #FED7D7;
+        }
+
+        .instruction {
+            font-size: 0.95em;
+            color: #A0AEC0;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        
+        .correct-input {
+            border-color: var(--success) !important;
+            border-style: solid !important;
+            background: #F0FFF4 !important;
+            color: var(--success) !important;
+        }
+        
+        .wrong-input {
+            border-color: var(--error) !important;
+            border-style: solid !important;
+            background: #FFF5F5 !important;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pop-effect {
+            animation: pop 0.4s ease-out;
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .score-display {
+            font-size: 2.5em; 
+            color: var(--primary); 
+            font-weight: 900; 
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #EBF4FF, #E9D8FD);
+            padding: 20px 40px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <div class="game-container">
+        <h1>Revision - Vocab 8</h1>
+        <div class="progress" id="progressText"></div>
+
+        <div class="meaning-vi" id="vietnameseMeaning"></div>
+        
+        <div class="meta-tags">
+            <div class="tag tag-type" id="wordType"></div>
+            <div class="tag tag-hint" id="firstLetterHint"></div>
+            <div class="tag tag-word-count" id="wordCountHint"></div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="wordInput" autocomplete="off" placeholder="Nhập từ hoặc cụm từ...">
+        </div>
+        
+        <button class="btn" id="mainBtn">Kiểm tra</button>
+
+        <div class="explanation-area" id="explanationArea">
+            <div class="status-msg" id="statusMsg"></div>
+            <div class="info-row">
+                <span class="info-label">Ý nghĩa:</span> <span id="enMeaning"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Ví dụ:</span> <i><span id="exampleText"></span></i>
+            </div>
+            <div class="info-row" style="margin-top: 15px;">
+                <span class="info-label">Phát âm:</span> <span class="ipa-text" id="ipaText"></span>
+            </div>
+        </div>
+        
+        <div class="instruction" id="instructionText">Nhấn Enter để nộp đáp án.</div>
+    </div>
+
+    <script>
+        // Load data
+        let idiomsData = [{"word": "accommodation", "type": "Danh từ (n.)", "vi": "chỗ ở", "en": "A place to stay", "ex": "We booked our accommodation online.", "ipa": "/əˌkɒməˈdeɪʃn/"}, {"word": "luggage", "type": "Danh từ (n.)", "vi": "hành lý", "en": "Bags you take when travelling", "ex": "I put my luggage in the hotel room.", "ipa": "/ˈlʌɡɪdʒ/"}, {"word": "journey", "type": "Danh từ (n.)", "vi": "hành trình, chuyến đi", "en": "The act of travelling from one place to another", "ex": "The journey took about three hours.", "ipa": "/ˈdʒɜːni/"}, {"word": "go sightseeing", "type": "Cụm động từ (v. phrase)", "vi": "đi ngắm cảnh", "en": "To visit famous or interesting places", "ex": "We went sightseeing around the old town.", "ipa": "/ɡəʊ ˈsaɪtˌsiːɪŋ/"}, {"word": "explore", "type": "Động từ (v.)", "vi": "khám phá", "en": "To travel around and discover a place", "ex": "We explored the island on foot.", "ipa": "/ɪkˈsplɔːr/"}, {"word": "book", "type": "Động từ (v.)", "vi": "đặt trước (vé, phòng...)", "en": "To arrange a ticket or room in advance", "ex": "I booked a hotel for two nights.", "ipa": "/bʊk/"}, {"word": "pack", "type": "Động từ (v.)", "vi": "đóng gói hành lý", "en": "To put things into a bag for a trip", "ex": "I packed my clothes the night before.", "ipa": "/pæk/"}, {"word": "wander", "type": "Động từ (v.)", "vi": "đi lang thang, không có mục đích rõ ràng", "en": "To walk around without a fixed plan", "ex": "We wandered through the local market.", "ipa": "/ˈwɒndər/"}, {"word": "convenient", "type": "Tính từ (adj.)", "vi": "tiện lợi, thuận tiện", "en": "Easy and suitable to use", "ex": "The hotel is convenient for sightseeing.", "ipa": "/kənˈviːniənt/"}, {"word": "adventurous", "type": "Tính từ (adj.)", "vi": "thích phiêu lưu, mạo hiểm", "en": "Enjoying exciting or unusual experiences", "ex": "My brother is adventurous and loves hiking.", "ipa": "/ədˈventʃərəs/"}, {"word": "memorable", "type": "Tính từ (adj.)", "vi": "đáng nhớ", "en": "Worth remembering", "ex": "Our trip to Sapa was memorable.", "ipa": "/ˈmemərəbl/"}, {"word": "go on holiday", "type": "Cụm động từ (v. phrase)", "vi": "đi nghỉ mát", "en": "To take a holiday away from home", "ex": "We usually go on holiday in July.", "ipa": "/ɡəʊ ɒn ˈhɒlədeɪ/"}, {"word": "book a flight", "type": "Cụm động từ (v. phrase)", "vi": "đặt vé máy bay", "en": "To reserve a seat on a plane", "ex": "We booked a flight to Bangkok.", "ipa": "/bʊk ə flaɪt/"}, {"word": "tourist attraction", "type": "Cụm danh từ (n. phrase)", "vi": "điểm thu hút khách du lịch", "en": "A place that tourists like to visit", "ex": "The ancient temple is a famous tourist attraction.", "ipa": "/ˈtʊərɪst əˌtrækʃn/"}, {"word": "set off", "type": "Cụm động từ (phr. v.)", "vi": "khởi hành", "en": "To start a journey", "ex": "We set off early to avoid the traffic.", "ipa": "/set ɒf/"}, {"word": "check in", "type": "Cụm động từ (phr. v.)", "vi": "làm thủ tục nhận phòng/vé", "en": "To register at a hotel or airport", "ex": "We checked in at the hotel at 2 p.m.", "ipa": "/tʃek ɪn/"}, {"word": "check out", "type": "Cụm động từ (phr. v.)", "vi": "làm thủ tục trả phòng", "en": "To leave a hotel after paying", "ex": "We checked out before 11 a.m.", "ipa": "/tʃek aʊt/"}, {"word": "get around", "type": "Cụm động từ (phr. v.)", "vi": "đi lại, di chuyển", "en": "To travel from place to place", "ex": "It's easy to get around the city by bus.", "ipa": "/ɡet əˈraʊnd/"}, {"word": "look around", "type": "Cụm động từ (phr. v.)", "vi": "nhìn ngó xung quanh, tham quan", "en": "To explore a place by looking at it", "ex": "We spent the morning looking around the old town.", "ipa": "/lʊk əˈraʊnd/"}, {"word": "off the beaten track", "type": "Thành ngữ (idiom)", "vi": "nơi hẻo lánh, ít người biết đến", "en": "In a place that few tourists visit", "ex": "We found a quiet village off the beaten track.", "ipa": "/ɒf ðə ˌbiːtn ˈtræk/"}, {"word": "travel light", "type": "Thành ngữ (idiom)", "vi": "đi du lịch gọn nhẹ", "en": "To travel with very little luggage", "ex": "I prefer to travel light and take only a backpack.", "ipa": "/ˌtrævl ˈlaɪt/"}];
+        
+        // Randomize order on load
+        idiomsData = idiomsData.sort(() => Math.random() - 0.5);
+        
+        let currentIndex = 0;
+        let isAnswered = false;
+        let score = 0;
+        
+        // Audio Context setup
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        // Confetti Logic
+        const canvas = document.getElementById('confetti');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        function fireConfetti() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            const colors = ['#6B46C1', '#4299E1', '#F6AD55', '#ED64A6', '#48BB78'];
+            for(let i = 0; i < 100; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 100,
+                    r: Math.random() * 6 + 4,
+                    dx: Math.random() * 10 - 5,
+                    dy: Math.random() * -10 - 5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    tilt: Math.random() * 10
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            requestAnimationFrame(animateConfetti);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.dy += 0.3; // gravity
+                p.x += p.dx;
+                p.y += p.dy;
+                p.tilt += 0.1;
+                
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
+                ctx.stroke();
+
+                if(p.y > canvas.height) particles.splice(index, 1);
+            });
+        }
+
+        // Synths for sound effects
+        function playSound(type) {
+            if(audioCtx.state === 'suspended') audioCtx.resume();
+            
+            if (type === 'correct') {
+                // Happy chime
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc1.type = 'sine';
+                osc2.type = 'triangle';
+                
+                osc1.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc1.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc1.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                osc1.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.3); // C6
+                
+                osc2.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                osc2.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                osc2.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); 
+                osc2.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.3); 
+
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc1.start();
+                osc2.start();
+                osc1.stop(audioCtx.currentTime + 0.8);
+                osc2.stop(audioCtx.currentTime + 0.8);
+                
+            } else {
+                // Error boop
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function speakPhrase(phrase) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                let cleanPhrase = phrase
+                    .replace(/\bsth\b/gi, 'something')
+                    .replace(/\bsb\b/gi, 'somebody')
+                    .replace(/\bone's\b/gi, "someone's");
+                    
+                let utterance = new SpeechSynthesisUtterance(cleanPhrase);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            const currentData = idiomsData[currentIndex];
+            const firstLetter = currentData.word.charAt(0).toLowerCase();
+            const wordCount = currentData.word.trim().split(/\s+/).length;
+            
+            document.getElementById('progressText').innerText = `Câu ${currentIndex + 1} / ${idiomsData.length}`;
+            document.getElementById('vietnameseMeaning').innerText = currentData.vi;
+            document.getElementById('wordType').innerHTML = `🔍 <b>${currentData.type}</b>`;
+            document.getElementById('firstLetterHint').innerHTML = `💡 Bắt đầu bằng: <b>'${firstLetter}'</b>`;
+            document.getElementById('wordCountHint').innerHTML = `📝 Số từ: <b>${wordCount} từ</b>`;
+            
+            const inputEl = document.getElementById('wordInput');
+            inputEl.value = '';
+            inputEl.readOnly = false;
+            inputEl.className = '';
+            
+            document.getElementById('explanationArea').classList.remove('show');
+            document.getElementById('mainBtn').innerText = 'Kiểm tra';
+            document.getElementById('instructionText').innerText = 'Nhấn Enter để nộp đáp án.';
+            
+            setTimeout(() => {
+                inputEl.focus();
+            }, 100);
+        }
+
+        function checkAnswer() {
+            if (isAnswered) {
+                nextQuestion();
+                return;
+            }
+
+            const inputEl = document.getElementById('wordInput');
+            if (!inputEl) return;
+            
+            // Allow basic variations like trailing spaces and case insensitivity
+            const userAnswer = inputEl.value.trim().toLowerCase();
+            const currentData = idiomsData[currentIndex];
+            const correctAnswer = currentData.word.toLowerCase();
+            
+            const explanationArea = document.getElementById('explanationArea');
+            const statusMsg = document.getElementById('statusMsg');
+            
+            isAnswered = true; 
+            inputEl.readOnly = true;
+            
+            if (userAnswer === correctAnswer) {
+                score++;
+                playSound('correct');
+                fireConfetti();
+                
+                inputEl.classList.add('correct-input');
+                document.querySelector('.game-container').classList.add('pop-effect');
+                setTimeout(()=>document.querySelector('.game-container').classList.remove('pop-effect'), 400);
+                
+                statusMsg.innerHTML = "✨ Tuyệt vời! Chính xác!";
+                statusMsg.className = 'status-msg correct';
+            } else {
+                playSound('wrong');
+                // Khong sua input thanh dap an dung, de nguyen dap an sai cua hoc sinh
+                inputEl.classList.add('wrong-input');
+                inputEl.classList.add('shake');
+                setTimeout(() => {
+                    inputEl.classList.remove('shake');
+                }, 500);
+                
+                statusMsg.innerHTML = `❌ Sai rồi! Đáp án là: <b style="margin-left: 8px;">${currentData.word}</b>`;
+                statusMsg.className = 'status-msg incorrect';
+            }
+            
+            document.getElementById('enMeaning').innerText = currentData.en;
+            document.getElementById('exampleText').innerText = currentData.ex;
+            document.getElementById('ipaText').innerText = currentData.ipa;
+            
+            explanationArea.classList.add('show');
+            
+            document.getElementById('mainBtn').innerText = 'Tiếp tục';
+            document.getElementById('instructionText').innerText = 'Nhấn Enter để chuyển sang câu tiếp theo.';
+            
+            speakPhrase(currentData.word);
+        }
+
+        function nextQuestion() {
+            if (currentIndex < idiomsData.length - 1) {
+                currentIndex++;
+                loadQuestion();
+            } else {
+                document.querySelector('.game-container').innerHTML = `
+                    <h1 style="font-size: 3.5em; margin-bottom: 20px;">🏆</h1>
+                    <h1>Hoàn thành!</h1>
+                    <p style="font-size: 1.2em; color: var(--text-light); margin-bottom: 20px;">
+                        Bạn đã luyện tập xong bộ từ vựng Revision - Vocab 8.
+                    </p>
+                    <div class="score-display">
+                        Đúng: ${score} / ${idiomsData.length}
+                    </div>
+                    <br>
+                    <button class="btn" onclick="location.reload()">Chơi lại từ đầu</button>
+                `;
+                fireConfetti();
+                
+                // Play final success sound
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.2);
+                osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 1.5);
+            }
+        }
+
+        document.getElementById('mainBtn').addEventListener('click', checkAnswer);
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        loadQuestion();
+    </script>
+</body>
+</html>
