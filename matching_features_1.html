@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revision: [Matching features 1]</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #5c6bc0;
+            --primary-light: #8e99f3;
+            --primary-dark: #26418f;
+            --bg-color: #f4f7fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --correct: #4caf50;
+            --incorrect: #f44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 30px;
+        }
+
+        .meaning {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .pos {
+            font-size: 1.2rem;
+            color: #777;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .hint {
+            font-size: 1.2rem;
+            color: #f39c12;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        input[type="text"] {
+            font-size: 2rem;
+            padding: 15px;
+            width: 80%;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-light);
+        }
+
+        input.correct-input {
+            border-color: var(--correct) !important;
+            color: var(--correct);
+        }
+
+        input.incorrect-input {
+            border-color: var(--incorrect) !important;
+            color: var(--incorrect);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-next {
+            background-color: #f39c12;
+        }
+
+        .btn-next:hover {
+            background-color: #d68910;
+        }
+
+        /* Phần hiển thị đáp án trực tiếp */
+        #feedback-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #eee;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-word {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+            margin: 0;
+            display: inline-block;
+        }
+
+        .feedback-ipa {
+            font-size: 1.5rem;
+            color: #d35400;
+            margin-bottom: 15px;
+            font-family: 'Lucida Sans', sans-serif;
+        }
+
+        .feedback-example {
+            font-size: 1.2rem;
+            color: #444;
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 5px solid var(--primary);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .speak-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            vertical-align: middle;
+            margin-left: 10px;
+            transition: transform 0.2s;
+        }
+
+        .speak-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Bảng nộp điểm */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.1rem;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        .status {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .hidden { display: none !important; }
+        .score-board { font-size: 1.5rem; position: absolute; top: 20px; right: 20px; font-weight: bold; color: var(--primary-dark); }
+        .progress { font-size: 1.2rem; color: #666; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <!-- Màn hình bắt đầu -->
+        <div id="start-screen" class="card">
+            <h1>Game Ôn Tập Vocabulary</h1>
+            <h2>Chủ đề: [Matching features 1]</h2>
+            <p>Hãy đọc nghĩa, từ loại, xem gợi ý và điền từ tiếng Anh tương ứng.<br><strong>(Các câu hỏi sẽ xuất hiện ngẫu nhiên)</strong></p>
+            <button class="btn" onclick="startGame()">Bắt Đầu Ngay</button>
+        </div>
+
+        <!-- Màn hình trò chơi -->
+        <div id="game-screen" class="card hidden">
+            <div class="score-board">Điểm: <span id="score-display">0</span></div>
+            <div class="progress">Câu: <span id="current-q-index">1</span> / <span id="total-q">15</span></div>
+            
+            <div class="meaning" id="question-meaning"></div>
+            <div class="pos" id="question-pos"></div>
+            <div class="hint" id="question-hint"></div>
+            
+            <input type="text" id="answer-input" autocomplete="off" placeholder="Nhập từ của bạn vào đây...">
+            <br>
+            <button class="btn" id="submit-btn" onclick="checkAnswer()">Kiểm tra (Enter)</button>
+
+            <!-- Phần đáp án hiện trực tiếp bên dưới -->
+            <div id="feedback-section" class="hidden">
+                <div id="feedback-status" class="status"></div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="feedback-word" id="feedback-word"></div>
+                    <button class="speak-btn" onclick="playTTS(document.getElementById('feedback-word').innerText)" title="Nghe phát âm">🔊</button>
+                </div>
+                <div class="feedback-ipa" id="feedback-ipa"></div>
+                <div class="feedback-example">
+                    <strong>Ví dụ:</strong> <span id="feedback-example-text"></span>
+                </div>
+                <button class="btn btn-next" id="next-btn" onclick="nextQuestion()">Tiếp tục (Enter)</button>
+            </div>
+        </div>
+
+        <!-- Màn hình kết thúc & Form -->
+        <div id="end-screen" class="card hidden">
+            <h1>Hoàn Thành Xuất Sắc!</h1>
+            <p style="font-size: 2rem;">Điểm của bạn: <span id="final-score" style="color: var(--correct); font-weight: bold;"></span></p>
+            
+            <form id="submit-form" onsubmit="submitScore(event)">
+                <div class="form-group">
+                    <label for="student-name">Họ và tên:</label>
+                    <input type="text" id="student-name" name="Họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <label for="student-class">Lớp:</label>
+                    <input type="text" id="student-class" name="Lớp" required>
+                </div>
+                <input type="hidden" name="Tên bài" value="[Matching features 1]">
+                <input type="hidden" id="hidden-score" name="Điểm">
+                
+                <button type="submit" class="btn" id="form-submit-btn">Nộp Điểm</button>
+            </form>
+            <div id="form-message" style="margin-top: 15px; color: var(--correct); font-weight: bold; font-size: 1.2rem;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu từ vựng trích xuất từ ảnh
+        const vocabData = [
+            { word: "access", type: "(v)", ipa: "/ˈæk.ses/", meaning: "truy cập / tiếp cận", example: "Students can access the library online." },
+            { word: "military", type: "(n)", ipa: "/ˈmɪl.ɪ.tər.i/", meaning: "quân đội", example: "He works in the military." },
+            { word: "charity", type: "(n)", ipa: "/ˈtʃær.ə.ti/", meaning: "tổ chức từ thiện", example: "Many charities help poor children." },
+            { word: "founder", type: "(n)", ipa: "/ˈfaʊn.dər/", meaning: "người sáng lập", example: "She is the founder of the company." },
+            { word: "afford", type: "(v)", ipa: "/əˈfɔːd/", meaning: "có đủ tiền để mua", example: "I can afford this book." },
+            { word: "assembly line", type: "(n)", ipa: "/əˈsem.bli ˌlaɪn/", meaning: "dây chuyền lắp ráp", example: "Cars are made on an assembly line." },
+            { word: "chemist", type: "(n)", ipa: "/ˈkem.ɪst/", meaning: "nhà hóa học / người bán dược phẩm", example: "Her uncle is a chemist." },
+            { word: "customer service", type: "(n)", ipa: "/ˈkʌs.tə.mər ˌsɜː.vɪs/", meaning: "dịch vụ khách hàng", example: "Good customer service makes people happy." },
+            { word: "shallow", type: "(adj.)", ipa: "/ˈʃæl.əʊ/", meaning: "Nông, không sâu", example: "The Arctic Ocean is the shallowest of the world's oceans." },
+            { word: "mild", type: "(adj.)", ipa: "/maɪld/", meaning: "Ôn hòa, dịu nhẹ", example: "The Gulf Stream helps keep the climate in Western Europe mild." },
+            { word: "equator", type: "(n.)", ipa: "/ɪˈkweɪ.tə(r)/", meaning: "Đường xích đạo", example: "Countries near the equator generally have a warm climate throughout the year." },
+            { word: "name after", type: "(v. phr.)", ipa: "/ˈneɪm ˌɑːf.tə(r)/", meaning: "Đặt tên theo, lấy tên từ", example: "The Indian Ocean is named after the country of India." },
+            { word: "merchant", type: "(n.)", ipa: "/ˈmɜː.tʃənt/", meaning: "Thương nhân, nhà buôn", example: "Merchants travelled across the Indian Ocean to trade spices, silk and gold." },
+            { word: "monsoon", type: "(n.)", ipa: "/mɒnˈsuːn/", meaning: "Gió mùa; mùa gió mùa", example: "Farmers in India depend on the summer monsoon to provide enough rain for rice cultivation." },
+            { word: "ocean floor", type: "(n. phr.)", ipa: "/ˈəʊ.ʃən flɔː(r)/", meaning: "Đáy đại dương", example: "The ocean floor beneath the Mariana Trench reaches extraordinary depths." }
+        ];
+
+        let questions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let isAnswering = true; // Trạng thái đang trả lời hay đang xem đáp án
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzRJz9T3x-0uYVj_1AFxGzCrbCV3fRY_F7GmKeiIgp-Xr-ABHe5BAtVoAoUBJlBvOaM/exec';
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        function playTone(frequency, type, duration) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        function playCorrect() { playTone(600, 'sine', 0.1); setTimeout(() => playTone(800, 'sine', 0.15), 100); }
+        function playWrong() { playTone(300, 'sawtooth', 0.3); }
+
+        function playTTS(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Hàm xáo trộn mảng để random thứ tự câu hỏi
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function generateHint(word) {
+            const parts = word.split(' ');
+            if (parts.length > 1) {
+                const letters = parts.map(p => p[0].toUpperCase() + '...').join(' ');
+                return `Gợi ý: ${parts.length} từ (${letters})`;
+            } else {
+                return `Gợi ý: ${word.length} chữ cái (bắt đầu bằng "${word[0].toUpperCase()}")`;
+            }
+        }
+
+        function startGame() {
+            // Xáo trộn ngẫu nhiên danh sách từ vựng mỗi lần chơi
+            questions = shuffle([...vocabData]);
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('total-q').innerText = questions.length;
+            document.getElementById('score-display').innerText = score;
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById('current-q-index').innerText = currentIndex + 1;
+            document.getElementById('question-meaning').innerText = q.meaning;
+            document.getElementById('question-pos').innerText = `Từ loại: ${q.type}`;
+            document.getElementById('question-hint').innerText = generateHint(q.word);
+            
+            const inputElement = document.getElementById('answer-input');
+            inputElement.value = '';
+            inputElement.className = '';
+            inputElement.disabled = false;
+            
+            // Ẩn phần feedback và hiện nút Submit
+            document.getElementById('feedback-section').classList.add('hidden');
+            document.getElementById('submit-btn').classList.remove('hidden');
+            
+            isAnswering = true;
+            inputElement.focus();
+        }
+
+        function checkAnswer() {
+            if (!isAnswering) return;
+            
+            const inputElement = document.getElementById('answer-input');
+            const userAnswer = inputElement.value.trim().toLowerCase();
+            const currentQ = questions[currentIndex];
+            const correctAnswer = currentQ.word.toLowerCase();
+
+            inputElement.disabled = true;
+            isAnswering = false;
+
+            const feedbackStatus = document.getElementById('feedback-status');
+            
+            if (userAnswer === correctAnswer) {
+                score++;
+                document.getElementById('score-display').innerText = score;
+                inputElement.classList.add('correct-input');
+                playCorrect();
+                feedbackStatus.innerText = "🎉 CHÍNH XÁC!";
+                feedbackStatus.style.color = "var(--correct)";
+            } else {
+                inputElement.classList.add('incorrect-input');
+                playWrong();
+                feedbackStatus.innerText = "❌ CHƯA CHÍNH XÁC!";
+                feedbackStatus.style.color = "var(--incorrect)";
+            }
+
+            // Điền dữ liệu vào phần feedback
+            document.getElementById('feedback-word').innerText = currentQ.word;
+            document.getElementById('feedback-ipa').innerText = currentQ.ipa;
+            document.getElementById('feedback-example-text').innerText = currentQ.example;
+            
+            // Hiện phần feedback, ẩn nút Kiểm tra
+            document.getElementById('feedback-section').classList.remove('hidden');
+            document.getElementById('submit-btn').classList.add('hidden');
+            
+            // Đọc âm thanh từ vựng
+            playTTS(currentQ.word);
+            
+            // Focus vào nút "Tiếp tục" để học sinh tiện bấm Enter
+            setTimeout(() => document.getElementById('next-btn').focus(), 100);
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+            
+            const finalScoreText = `${score} / ${questions.length}`;
+            document.getElementById('final-score').innerText = finalScoreText;
+            document.getElementById('hidden-score').value = finalScoreText;
+
+            fireConfetti();
+        }
+
+        function fireConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) { return clearInterval(interval); }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function submitScore(e) {
+            e.preventDefault();
+            const btn = document.getElementById('form-submit-btn');
+            const msg = document.getElementById('form-message');
+            btn.innerText = "Đang nộp...";
+            btn.disabled = true;
+            const form = document.getElementById('submit-form');
+            const data = new FormData(form);
+
+            fetch(scriptURL, { method: 'POST', body: data, mode: 'no-cors' })
+                .then(() => {
+                    msg.innerText = "✅ Nộp điểm thành công!";
+                    btn.innerText = "Đã nộp";
+                })
+                .catch(error => {
+                    msg.innerText = "❌ Lỗi: Không thể nộp điểm. Vui lòng thử lại.";
+                    msg.style.color = "var(--incorrect)";
+                    btn.innerText = "Nộp Điểm";
+                    btn.disabled = false;
+                });
+        }
+
+        // Xử lý phím Enter
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                if (!document.getElementById('start-screen').classList.contains('hidden')) {
+                    startGame();
+                } else if (!document.getElementById('game-screen').classList.contains('hidden')) {
+                    if (isAnswering) {
+                        checkAnswer();
+                    } else {
+                        nextQuestion();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
